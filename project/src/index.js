@@ -57,27 +57,39 @@ class Content extends React.Component {
   }
 
   async componentDidMount() {
-    console.log('test..');
-    await fetch('http://localhost:3001/locationAll', {
-      //put your server address here
+    console.log("test..");
+    await fetch('http://localhost:3001/locationAll', { //put your server address here
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
     })
       .then((response) => response.json())
       .then((responseData) => {
-        this.setState({ data: responseData });
-      });
+        this.setState({ data: responseData })
+      }
+      );
   }
   render() {
-    const data = this.state.data;
+    const data =this.state.data;
+    
     return (
       <main className="container">
         <h2>Cultural Programmes</h2>
+        <table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Venues</th>
+      <th scope="col">Number of Event</th>
+    </tr>
+  </thead>
+  <tbody>
         {data.map((element, index) => (
-          <Table i={index} data={element} key={index} />
+          <Table i={index} data ={element} key={index} />
         ))}
+      </tbody>
+</table>
       </main>
     );
   }
@@ -86,19 +98,17 @@ class Content extends React.Component {
 class Table extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { selected: -1 };
+    this.state = { sort: 0 };
   }
   render() {
-    let i = this.props.i;
-    let data = this.props.data;
+    let i= this.props.i;
+    let data =this.props.data;
     return (
-      <div className="m-2">
-        <div>
-          <h6>{i + 1}.</h6>
-          <p>{data.venueName}</p>
-          <p>Number of Event : {data.NoOfEvent}</p>
-        </div>
-      </div>
+      <tr>
+      <th scope="row">{i+1}</th>
+      <td>{data.venueName}</td>
+      <td>{data.NoOfEvent}</td>
+    </tr>
     );
   }
 }

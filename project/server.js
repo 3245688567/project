@@ -186,7 +186,6 @@ fetch('https://www.lcsd.gov.hk/datagovhk/event/events.xml')
   });
 
 app.get('/locationAll', (req, res) => {
-
   Venue.find({})
     .then(async (data) => {
       res.setHeader('Content-Type', 'text/plain');
@@ -195,4 +194,13 @@ app.get('/locationAll', (req, res) => {
     .catch((error) => console.log(error));
 });
 
+app.post('/search', (req, res) => {
+  keyword=req.body.keyword;
+  Venue.find({venueName:{ $regex: keyword, $options: 'i' }})
+    .then(async (data) => {
+      res.setHeader('Content-Type', 'text/plain');
+      res.send(data);
+    })
+    .catch((error) => console.log(error));
+});
 const server = app.listen(3001);

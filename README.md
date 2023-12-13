@@ -6,3 +6,6 @@ Update log: (guys when u update something, please write a log here):
 Update index.js -> index.jsx
 Log: 
 I change a little bit on the UI, basically introduce a global var "login"=0. When login as an user, login=1. When login as an admin, login=2. It will affect the content on content and login page. 
+
+2. Fong
+   add sorting and searching function in index.jsx and server.js

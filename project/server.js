@@ -5,6 +5,9 @@ const app = express();
 const { parseString } = require('xml2js');
 
 const cors = require('cors');
+
+const loginHandler = require('./src/backend/userHandler.js');
+
 app.use(cors());
 app.use(express.json());
 
@@ -95,6 +98,7 @@ fetch('https://www.lcsd.gov.hk/datagovhk/event/venues.xml')
                   newVenue.venueName = venueName;
                   newVenue.latitude = latitude;
                   newVenue.longitude = longitude;
+                  newVenue.NoOfEvent = 0;
                   await newVenue.save();
                 }
               });
@@ -203,4 +207,14 @@ app.post('/search', (req, res) => {
     })
     .catch((error) => console.log(error));
 });
+
+
+app.post('/register', (req, res) => {
+  return loginHandler.register(req, res);
+})
+
+app.post('/login', (req, res) => {
+  return loginHandler.login(req, res);
+})
+
 const server = app.listen(3001);

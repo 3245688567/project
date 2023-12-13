@@ -1,34 +1,79 @@
 import ReactDOM from 'react-dom/client';
 import React from 'react';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom';
+import LoginPage from './frontend/LoginPage'
 
-var login = 2;   //0=non-user, 1=user, 2=admin, will show different content in "Content"&"Login"&"Title" page
+var login = 0;   //0=non-user, 1=user, 2=admin, will show different content in "Content"&"Login"&"Title" page
+
 
 class App extends React.Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      userType: null,
+    };
+  }
+
+  componentDidMount() {
+    const userType = sessionStorage.getItem("userType");
+    if(userType === "user")
+      login = 1;
+    else if(userType === "admin")
+      login = 2;
+    else 
+      login = 0;
+    this.setState({ userType });
+  }
+
   render() {
+    
     return (
-      <>
+      <>      
       <Title name="Cultural programmes" />
         <BrowserRouter>
-          <div>
-          <ul style={{textAlign:"center"}}>
-            <a href="/" class="btn btn-primary">Home</a>
-            <a href="/content" class="btn btn-secondary">Content</a>
-            <a href="/login" class="btn btn-success">Login</a>
-          </ul>
-          </div>
-
-          <hr />
-
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/content" element={<Content />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/" element={(login === 0) ? <LoginPage /> : <Home />  } />
+            <Route path="/content" element={(login === 0) ? <LoginPage /> : <Content /> } />
+            <Route path="/home" element={(login === 0) ? <LoginPage /> : <Home /> } />            
             <Route path="*" element={<NoMatch />} />
           </Routes>
         </BrowserRouter>
       </>
     );
+  }
+}
+
+class Title extends React.Component {
+  handleLogout = () => {
+    sessionStorage.clear();
+    window.location.href = "/"; 
+  };
+
+  render() {
+      return (
+        <div>
+        <header className="bg-warning">
+          <h1 className="display-4 text-center">{this.props.name}</h1>
+          
+          {login===0? '' :
+              <>
+                <ul style={{textAlign:"right"}}>
+                    <p>{login === 1? 'User' : 'Admin' } : {sessionStorage.getItem("userName")}<button class="btn btn-link" id="logout" onClick={this.handleLogout} >logout</button></p>
+                </ul>
+                <div>
+                  <ul style={{textAlign:"center"}}>
+                    <a href="/" class="btn btn-primary">Home</a>
+                    <a href="/content" class="btn btn-secondary">Content</a>
+                  </ul>
+                </div>
+                <hr />
+              </>
+           }          
+        </header>
+        </div>
+      );      
   }
 }
 
@@ -80,29 +125,6 @@ class Home extends React.Component {
   }
 }
 
-class Title extends React.Component {
-  render() {
-    if (login===0){
-      return (
-        <header className="bg-warning">
-          <h1 className="display-4 text-center">{this.props.name}</h1>
-          </header>
-      );
-      }
-      else {
-      return (
-        <div>
-        <header className="bg-warning">
-          <h1 className="display-4 text-center">{this.props.name}</h1>
-          <ul style={{textAlign:"right"}}>
-          <p>Username:<button class="btn btn-link" id="logout">logout</button></p>
-          </ul>
-        </header>
-        </div>
-      );
-      }
-  }
-}
 
 class Content extends React.Component {
   constructor(props) {
@@ -177,44 +199,41 @@ class Content extends React.Component {
     let keyword=this.state.keyword;
     if (login === 1) {
       return (
-        <main className="container">
-          <h2>Cultural Programmes</h2>
-          <div class="row align-items-center">
-            <label class="col-sm-2 col-form-label col-form-label-lg">Search for location:</label>
-            <div class="col-sm-4">
-              <input type="text" class="form-control" id="search" placeholder=" Keywords in the name" value={this.state.keyword}
-              onChange={(e)=>this.setkeyword(e.target.value)}></input>
-            </div>
-            <div class="col-sm-4">
-              <button type="submit" class="btn btn-warning mb-2" onClick={(e) => this.search(keyword)}>Search</button>
-            </div>
-          </div>
+        <>
 
-          <table class="table table-striped table-hover">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Venues</th>
-                <th scope="col" onClick={() => this.SortTable(data)}>Number of Event ⇅</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((element, index) => (
-                <Table i={index} data={element} key={index} order={this.order} />
-              ))}
-            </tbody>
-          </table>
-        </main>
+          <main className="container">
+
+
+            <h2>Cultural Programmes</h2>
+            <div class="row align-items-center">
+              <label class="col-sm-2 col-form-label col-form-label-lg">Search for location:</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" id="search" placeholder=" Keywords in the name" value={this.state.keyword}
+                onChange={(e)=>this.setkeyword(e.target.value)}></input>
+              </div>
+              <div class="col-sm-4">
+                <button type="submit" class="btn btn-warning mb-2" onClick={(e) => this.search(keyword)}>Search</button>
+              </div>
+            </div>
+
+            <table class="table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Venues</th>
+                  <th scope="col" onClick={() => this.SortTable(data)}>Number of Event ⇅</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((element, index) => (
+                  <Table i={index} data={element} key={index} order={this.order} />
+                ))}
+              </tbody>
+            </table>
+          </main>
+        </>
       );
     }
-    else if (login === 0) {
-      return (
-        <div style={{ textAlign: "center" }}>
-          <h2>Please click Login button to login</h2>
-        </div>
-      )
-    }
-
     else if (login === 2) {
       return (
         <section>
@@ -461,34 +480,6 @@ class Table extends React.Component {
   }
 }
 
-class Login extends React.Component {
-  render() {
-    if(login===0){
-    return (
-      <div style={{textAlign:"center"}}>
-        <h2>Login</h2>
-        
-
-
-      </div>
-    );
-    }
-    else if(login===1){
-      return (
-        <div style={{textAlign:"center"}}>
-          <h2>You are now successfully login as an user</h2>
-        </div>
-      );
-     }
-     else if(login===2){
-      return (
-        <div style={{textAlign:"center"}}>
-          <h2>You are now successfully login as an admin</h2>
-        </div>
-      );
-      }
-  }
-}
 
 class NoMatch extends React.Component {
   render() {

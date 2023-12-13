@@ -2,7 +2,7 @@ import ReactDOM from 'react-dom/client';
 import React from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 
-var login = 2;   //0=non-user, 1=user, 2=admin, will show different content in "content" page
+var login = 2;   //0=non-user, 1=user, 2=admin, will show different content in "Content"&"Login"&"Title" page
 
 class App extends React.Component {
   render() {
@@ -82,14 +82,25 @@ class Home extends React.Component {
 
 class Title extends React.Component {
   render() {
-    return (
-      <header className="bg-warning">
-        <h1 className="display-4 text-center">{this.props.name}</h1>
-        <ul style={{textAlign:"right"}}>
-        <p>Username:<button class="btn btn-link" id="logout" onClick={(e)=>{}}>logout</button></p>
-        </ul>
-      </header>
-    );
+    if (login===0){
+      return (
+        <header className="bg-warning">
+          <h1 className="display-4 text-center">{this.props.name}</h1>
+          </header>
+      );
+      }
+      else {
+      return (
+        <div>
+        <header className="bg-warning">
+          <h1 className="display-4 text-center">{this.props.name}</h1>
+          <ul style={{textAlign:"right"}}>
+          <p>Username:<button class="btn btn-link" id="logout">logout</button></p>
+          </ul>
+        </header>
+        </div>
+      );
+      }
   }
 }
 
@@ -206,20 +217,226 @@ class Content extends React.Component {
 
     else if (login === 2) {
       return (
-        <div style={{ textAlign: "center" }}>
-          <h2>You are now admin and you can do CRUD now</h2>
-          <body>
-            <form>
-              <label for="Create">Create an Event:</label>
-              <input type="text" id="Create" name="Create" placeholder="Hello Hong Kong" required></input>
+        <section>
+        <h2 style={{textAlign:"center"}}>You are now an admin and you can do CRUD now</h2>
+        <br></br>
+        <div class="container p-5 my-5 border">
+        <h3 style={{textAlign:"center"}}>CRUD Stored Events</h3>
+        <br></br><br></br>
+        <span class="row">
+        <span class="col-sm-3">
+        <h3>Create an Event</h3>
+            <body>
               <br></br>
-              <input type="submit" value="Submit to Create"></input>
-            </form>
-          </body>
-          <script>
+              <form id="CEvent">
+                 <label for="Ceid">Event ID: </label>
+                 <br></br>
+                 <input type="number" id="Ceid" name="Ceid" placeholder="1234567" required></input>
+                 <br></br>
+                 <label for="Cetitle">Event Title: </label>
+                 <br></br>
+                 <input type="text" id="Cetitle" name="Cetitle" placeholder="Hello Hong Kong" required></input>
+                 <br></br>
+                 <label for="Cedate">Event Date: </label>
+                 <br></br>
+                 <input type="text" id="Cedate" name="Cedate" placeholder="1/1/2024"></input>
+                 <br></br>
+                 <label for="Cevenue">Event Venue Name: </label>
+                 <br></br>
+                 <input type="text" id="Cevenue" name="Cevenue" required></input>
+                 <br></br>
+                 <label for="CeDes">Event Description: </label>
+                 <br></br>
+                 <textarea id="CeDes" name="CeDes"></textarea>
+                 <br></br>
+                 <label for="CePresenter">Event Presenter: </label>
+                 <br></br>
+                 <input type="text" id="CePresenter" name="CePresenter" placeholder="Colin Tsang"></input>
+                 <br></br>
+                 <label for="CePrice">Event Price: </label>
+                 <br></br>
+                 <input type="text" id="CePrice" name="CePrice" placeholder="FOR FREE"></input>
+                 <br></br><br></br><br></br>
+                 <input type="submit" value="Create"></input>
+              </form>
+            </body>
+            </span>
+            <span class="col-sm-3">
+        <h3>Read(Find) Events</h3>
+            <body>
+              <br></br>
+              <form id="REventByID">
+                 <label for="Reid">By Event ID: </label>
+                 <br></br>
+                 <input type="number" id="Reid" name="Reid" placeholder="1234567" required></input>
+                 <br></br>
+                 <input type="submit" value="Find"></input>
+              </form>
+              <br></br><br></br>
+              <form id="REventByName">
+                 <label for="Rename">By Event Name: </label>
+                 <br></br>
+                 <input type="text" id="Rename" name="Rename" placeholder="Hello Hong Kong" required></input>
+                 <br></br>
+                 <input type="submit" value="Find"></input>
+              </form>
+              <br></br><br></br>
+              <form id="REventByDate">
+                 <label for="Redate">By Event Date: </label>
+                 <br></br>
+                 <input type="text" id="Redate" name="Redate" placeholder="1/1/2024" required></input>
+                 <br></br>
+                 <input type="submit" value="Find"></input>
+              </form>
+              <br></br><br></br>
+              <form id="REventByVenue">
+                 <label for="Revenue">By Venue: </label>
+                 <br></br>
+                 <input type="text" id="Revenue" name="Revenue" required></input>
+                 <br></br>
+                 <input type="submit" value="Find"></input>
+              </form>
+            </body>
+            </span>
+            <span class="col-sm-3">
+              <h3>Update an Event</h3>
+            <body>
+              <br></br>
+              <form id="UEvent">
+                 <label for="Ueid">Corresponding Event ID: </label>
+                 <br></br>
+                 <input type="number" id="Ueid" name="Ueid" placeholder="1234567" required></input>
+                 <br></br>
+                 <label for="Uetitle">Change Event Title: </label>
+                 <br></br>
+                 <input type="text" id="Uetitle" name="Uetitle" placeholder="Goodbye Hong Kong"></input>
+                 <br></br>
+                 <label for="Uedate">Add/Change Event Date: </label>
+                 <br></br>
+                 <input type="text" id="Uedate" name="Uedate" placeholder="1/12/2024"></input>
+                 <br></br>
+                 <label for="Uevenue">Update Event Venue Name: </label>
+                 <br></br>
+                 <input type="text" id="Uevenue" name="Uevenue"></input>
+                 <br></br>
+                 <label for="UeDes">Add/Change Event Description: </label>
+                 <br></br>
+                 <textarea id="UeDes" name="UeDes"></textarea>
+                 <br></br>
+                 <label for="UePresenter">Add/Change Event Presenter: </label>
+                 <input type="text" id="UePresenter" name="UePresenter" placeholder="Colin Tsang"></input>
+                 <br></br>
+                 <label for="CePrice">Add/Change Event Price: </label>
+                 <br></br>
+                 <input type="text" id="UePrice" name="UePrice" placeholder="$90"></input>
+                 <br></br><br></br><br></br>
+                 <input type="submit" value="Update"></input>
+              </form>
+            </body>
+            </span>
+            
+            <span class="col-sm-3">
+        <h3>Delete an Event</h3>
+        <body>
+              <br></br>
+              <form id="DEventByID">
+                 <label for="Deid">By Event ID: </label>
+                 <br></br>
+                 <input type="number" id="Deid" name="Deid" placeholder="1234567" required></input>
+                 <br></br>
+                 <input type="submit" value="Delete"></input>
+              </form>
+              <br></br><br></br>
+              <form id="DEventByName">
+                 <label for="Dename">By Event Name: </label>
+                 <br></br>
+                 <input type="text" id="Dename" name="Dename" placeholder="Hello Hong Kong" required></input>
+                 <br></br>
+                 <input type="submit" value="Delete"></input>
+              </form>
+              </body>
+            </span>
+            
+            </span>
+            <script>
 
-          </script>
+        </script>
         </div>
+        <div class="container p-5 my-5 border">
+        <h3 style={{textAlign:"center"}}>CRUD User Data</h3>
+        <br></br><br></br>
+        <span class="row">
+        <span class="col-sm-3">
+        <h3>Create an User</h3>
+            <body>
+              <br></br>
+              <form id="CUser">
+                 <label for="CUsername">Username: </label>
+                 <br></br>
+                 <input type="text" id="CUsername" name="CUsername" placeholder="Colin Tsang" required></input>
+                 <br></br>
+                 <label for="CPw">Password: </label>
+                 <br></br>
+                 <input type="text" id="CPw" name="CPw" required></input>
+                 <br></br><br></br>
+                 <input type="submit" value="Create"></input>
+              </form>
+            </body>
+            </span>
+            <span class="col-sm-3">
+        <h3>Read(Find) Users</h3>
+            <body>
+              <br></br>
+              <form id="RUser">
+                 <label for="RUsername">By Username: </label>
+                 <br></br>
+                 <input type="text" id="RUsername" name="RUsername" placeholder="Colin Tsang" required></input>
+                 <br></br><br></br>
+                 <input type="submit" value="Find"></input>
+              </form>
+            </body>
+            </span>
+            <span class="col-sm-3">
+            <h3>Update an User</h3>
+            <body>
+              <br></br>
+              <form id="UUser">
+                 <label for="UUsername">Corresponding Username: </label>
+                 <br></br>
+                 <input type="text" id="UUsername" name="UUsername" placeholder="Colin Tsang" required></input>
+                 <br></br>
+                 <label for="UNewUser">Change Username: </label>
+                 <br></br>
+                 <input type="text" id="UNewUser" name="UNewUser" placeholder="John Doe"></input>
+                 <br></br>
+                 <label for="UPw">Change Password: </label>
+                 <br></br>
+                 <input type="text" id="UPw" name="UPw"></input>
+                 <br></br><br></br>
+                 <input type="submit" value="Update"></input>
+              </form>
+            </body>
+            </span>
+            
+            <span class="col-sm-3">
+        <h3>Delete an User</h3>
+        <body>
+              <br></br>
+              <form id="DUser">
+                 <label for="DUsername">Username: </label>
+                 <br></br>
+                 <input type="text" id="DUsername" name="DUsername" placeholder="Colin Tsang" required></input>
+                 <br></br><br></br>
+                 <input type="submit" value="Delete"></input>
+              </form>
+              </body>
+            </span>
+            </span>
+        <script>
+          
+        </script>
+        </div>
+        </section>
 
       )
     }
@@ -259,14 +476,14 @@ class Login extends React.Component {
     else if(login===1){
       return (
         <div style={{textAlign:"center"}}>
-          <h2>You are now successfully login as user</h2>
+          <h2>You are now successfully login as an user</h2>
         </div>
       );
      }
      else if(login===2){
       return (
         <div style={{textAlign:"center"}}>
-          <h2>You are now successfully login as admin</h2>
+          <h2>You are now successfully login as an admin</h2>
         </div>
       );
       }

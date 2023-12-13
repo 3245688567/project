@@ -96,7 +96,7 @@ class Title extends React.Component {
 class Content extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { data: [] };
+    this.state = { data: [], order:0};//order: 0=ascending, 1=descending
   }
 
   async componentDidMount() {
@@ -113,8 +113,38 @@ class Content extends React.Component {
       }
       );
   }
+  SortTable(data){
+    console.log("sort...");
+    if(this.state.order===0) {
+      data.sort(this.ascending);
+      this.setState({ order:1 })
+    }
+    if(this.state.order===1) {
+      data.sort(this.descending);
+      this.setState({ order:0 })
+    }
+  }
+  ascending(a, b) {
+    if (a.NoOfEvent < b.NoOfEvent) {
+      return -1;
+    }
+    if (a.NoOfEvent > b.NoOfEvent) {
+      return 1;
+    }
+    return 0;
+  }
+  descending(b, a) {
+    if (a.NoOfEvent < b.NoOfEvent) {
+      return -1;
+    }
+    if (a.NoOfEvent > b.NoOfEvent) {
+      return 1;
+    }
+    return 0;
+  }
   render() {
     const data =this.state.data;
+    
     if (login === 1) {
     return (
       <main className="container">
@@ -124,12 +154,12 @@ class Content extends React.Component {
     <tr>
       <th scope="col">#</th>
       <th scope="col">Venues</th>
-      <th scope="col">Number of Event</th>
+      <th scope="col" onClick={()=>this.SortTable(data)}>Number of Event ⇅</th>
     </tr>
   </thead>
   <tbody>
         {data.map((element, index) => (
-          <Table i={index} data ={element} key={index} />
+          <Table i={index} data ={element} key={index} order={this.order} />
         ))}
       </tbody>
 </table>
@@ -169,7 +199,7 @@ class Content extends React.Component {
 class Table extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { sort: 0 };
+    this.state = { sort: this.props.order };
   }
   render() {
     let i= this.props.i;

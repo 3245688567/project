@@ -105,39 +105,38 @@ function LoginPage(props) {
 
   return (
     <div>
-
             {showRegisterForm ? (
-                  <>
-                    <h2>Register</h2>
-                    <form onSubmit={handleRegister}>
-                      <label>Account:<input type="text" value={accountInput} onChange={handleAccountChange} minLength={4} maxLength={16} pattern="[A-Za-z0-9]+" required/></label>
-                      <br />
-                      <label>Password:<input type="password" value={passwordInput} onChange={handlePasswordChange} minLength={4} maxLength={16} pattern="[A-Za-z0-9]+" required/></label>
-                      <br />
-                      <button type="submit">Register</button>
+                  <body style={{display:"flex", justifyContent:'center', alignItems:'center'}}>
 
-                      <br />
-                      <br />
-                      <p>Already has account?<button class="btn btn-link" onClick={handleToggleForm}>Login with your ID now.</button></p>
+                      <form style={{textAlign:'left' , margin:'100px', width:'auto'}} onSubmit={handleRegister}>                
+                        <h2>Register</h2><br />
+                        <label>Account:<input type="text" value={accountInput} onChange={handleAccountChange} minLength={4} maxLength={16} pattern="[A-Za-z0-9]+" required/></label>
+                        <br /><br />
+                        <label>Password:<input type="password" value={passwordInput} onChange={handlePasswordChange} minLength={4} maxLength={16} pattern="[A-Za-z0-9]+" required/></label>
+                        <br /><br />
+                        <button type="submit" class="btn btn-dark" style={{width:'300px'}}>Register</button>
+                        <br />
+                        <br />
+                        <p>Already has account?<button class="btn btn-link" onClick={handleToggleForm}>Login now.</button></p>
 
-                    </form>
-                  </>
+                      </form>
+
+                  </body>
             ) : (
-              <>
-                <h2>Login Page</h2>
-                <form onSubmit={handleLogin}>
-                  <label>Account:<input type="text" value={accountInput} onChange={handleAccountChange} minLength={4} maxLength={16} pattern="[A-Za-z0-9]+" required/></label>
-                  <br />
-                  <label>Password:<input type="password" value={passwordInput} onChange={handlePasswordChange} minLength={4} maxLength={16} pattern="[A-Za-z0-9]+" required/></label>
-                  <br />
-                  <button type="submit">Login</button>
-
-                  <br />
-                  <br />
-                  <p>Don't have ID? <button class="btn btn-link" onClick={handleToggleForm}>Create your ID now.</button></p>
-                  
-                </form>
-              </>
+                  <body style={{display:"flex", justifyContent:'center', alignItems:'center'}}>
+                    <form style={{textAlign:'left' , margin:'100px', width:'auto'}} onSubmit={handleLogin}>
+                      <h2>Login Page</h2><br />
+                      <label>Account:<input type="text" value={accountInput} onChange={handleAccountChange} minLength={4} maxLength={16} pattern="[A-Za-z0-9]+" required/></label>
+                      <br /><br />
+                      <label>Password:<input type="password" value={passwordInput} onChange={handlePasswordChange} minLength={4} maxLength={16} pattern="[A-Za-z0-9]+" required/></label>
+                      <br /><br />
+                      <button type="submit" class="btn btn-dark" style={{width:'300px'}}>Login</button>
+                      <br />
+                      <br />
+                      <p>Don't have ID? <button class="btn btn-link" onClick={handleToggleForm}>Create your ID now.</button></p>
+                      
+                    </form>
+                  </body>
             )}
 
     </div>

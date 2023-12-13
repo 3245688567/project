@@ -54,19 +54,19 @@ class Title extends React.Component {
   render() {
       return (
         <div>
-        <header className="bg-warning">
-          <h1 className="display-4 text-center">{this.props.name}</h1>
+        <header className="bg-warning" style={{ minHeight: '150px' }}>
+          <h1 className="display-4 text-center" style={{padding: '30px'}}>{this.props.name}</h1>
           
-          {login===0? '' :
+          {login===0? <></> :
               <>
-                <ul style={{textAlign:"right"}}>
-                    <p>{login === 1? 'User' : 'Admin' } : {sessionStorage.getItem("userName")}<button class="btn btn-link" id="logout" onClick={this.handleLogout} >logout</button></p>
-                </ul>
-                <div>
-                  <ul style={{textAlign:"center"}}>
-                    <a href="/" class="btn btn-primary">Home</a>
-                    <a href="/content" class="btn btn-secondary">Content</a>
-                  </ul>
+                <div style={{textAlign:'center'}}>
+                  <span>
+                    <a href="/" className="btn btn-primary">Home</a>
+                    <a href="/content" className="btn btn-secondary">Content</a>
+                  </span>
+                  <span style={{position:'absolute', right:'5px' }}>
+                    {login === 1 ? 'User' : 'Admin'}: {sessionStorage.getItem("userName")}    <button className="btn btn-link" id="logout" onClick={this.handleLogout}>Logout</button>
+                  </span>                  
                 </div>
                 <hr />
               </>

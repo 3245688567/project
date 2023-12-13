@@ -96,12 +96,12 @@ class Title extends React.Component {
 class Content extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { data: [], order:0};//order: 0=ascending, 1=descending
+    this.state = { data: [], order: 0,keyword:``};//order: 0=ascending, 1=descending
   }
 
   async componentDidMount() {
     console.log("test..");
-    await fetch('http://localhost:3001/locationAll', { //put your server address here
+    await fetch('http://localhost:3001/locationAll', { 
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -113,15 +113,34 @@ class Content extends React.Component {
       }
       );
   }
-  SortTable(data){
+  async search(keyword){
+    const data={keyword:keyword};
+    console.log(data);
+    await fetch('http://localhost:3001/search', { 
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+      .then((response) => response.json())
+      .then((responseData) => {
+        this.setState({ data: responseData })
+      }
+      );
+  }
+  setkeyword=(keyword)=>{
+    this.setState({ keyword: keyword})
+  }
+  SortTable(data) {
     console.log("sort...");
-    if(this.state.order===0) {
+    if (this.state.order === 0) {
       data.sort(this.ascending);
-      this.setState({ order:1 })
+      this.setState({ order: 1 })
     }
-    if(this.state.order===1) {
+    if (this.state.order === 1) {
       data.sort(this.descending);
-      this.setState({ order:0 })
+      this.setState({ order: 0 })
     }
   }
   ascending(a, b) {
@@ -143,54 +162,65 @@ class Content extends React.Component {
     return 0;
   }
   render() {
-    const data =this.state.data;
-    
+    const data = this.state.data;
+    let keyword=this.state.keyword;
     if (login === 1) {
-    return (
-      <main className="container">
-        <h2>Cultural Programmes</h2>
-        <table class="table table-striped table-hover">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Venues</th>
-      <th scope="col" onClick={()=>this.SortTable(data)}>Number of Event ⇅</th>
-    </tr>
-  </thead>
-  <tbody>
-        {data.map((element, index) => (
-          <Table i={index} data ={element} key={index} order={this.order} />
-        ))}
-      </tbody>
-</table>
-      </main>
-    );
-    }
-    else if (login===0){
       return (
-      <div style={{textAlign:"center"}}>
-            <h2>Please click Login button to login</h2>
-      </div>
+        <main className="container">
+          <h2>Cultural Programmes</h2>
+          <div class="row align-items-center">
+            <label class="col-sm-2 col-form-label col-form-label-lg">Search for location:</label>
+            <div class="col-sm-4">
+              <input type="text" class="form-control" id="search" placeholder=" Keywords in the name" value={this.state.keyword}
+              onChange={(e)=>this.setkeyword(e.target.value)}></input>
+            </div>
+            <div class="col-sm-4">
+              <button type="submit" class="btn btn-warning mb-2" onClick={(e) => this.search(keyword)}>Search</button>
+            </div>
+          </div>
+
+          <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Venues</th>
+                <th scope="col" onClick={() => this.SortTable(data)}>Number of Event ⇅</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((element, index) => (
+                <Table i={index} data={element} key={index} order={this.order} />
+              ))}
+            </tbody>
+          </table>
+        </main>
+      );
+    }
+    else if (login === 0) {
+      return (
+        <div style={{ textAlign: "center" }}>
+          <h2>Please click Login button to login</h2>
+        </div>
       )
     }
 
-    else if (login===2){
+    else if (login === 2) {
       return (
-        <div style={{textAlign:"center"}}>
-            <h2>You are now admin and you can do CRUD now</h2>
-            <body>
-              <form>
-                 <label for="Create">Create an Event:</label>
-                 <input type="text" id="Create" name="Create" placeholder="Hello Hong Kong" required></input>
-                 <br></br>
-                 <input type="submit" value="Submit to Create"></input>
-              </form>
-            </body>
-            <script>
+        <div style={{ textAlign: "center" }}>
+          <h2>You are now admin and you can do CRUD now</h2>
+          <body>
+            <form>
+              <label for="Create">Create an Event:</label>
+              <input type="text" id="Create" name="Create" placeholder="Hello Hong Kong" required></input>
+              <br></br>
+              <input type="submit" value="Submit to Create"></input>
+            </form>
+          </body>
+          <script>
 
-            </script>
+          </script>
         </div>
-        
+
       )
     }
   }

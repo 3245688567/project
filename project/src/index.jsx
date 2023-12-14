@@ -488,7 +488,7 @@ class Table extends React.Component {
           <td>{data.venueName}</td>
           <td>{data.NoOfEvent}</td>
           <td><Link to={`/detail/?id=${data.venueId}`}
-              className="btn btn-light" onClick={()=>venueId=data.venueId}
+              className="btn btn-light"
           >Detail</Link></td>
         </tr>
       </>

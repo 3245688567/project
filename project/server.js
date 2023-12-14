@@ -120,75 +120,69 @@ fetch('https://www.lcsd.gov.hk/datagovhk/event/venues.xml')
   });
 //---------------------------------------------------------------------------------
 //fetch events XML
-fetch('https://www.lcsd.gov.hk/datagovhk/event/events.xml')
-  .then(async response => await response.text())
-  .then(data => {
-    const xmldata = data;
+  fetch('https://www.lcsd.gov.hk/datagovhk/event/events.xml')
+    .then(async response => await response.text())
+    .then(data => {
+      const xmldata = data;
 
-    parseString(xmldata, async (err, result) => {
-      if (err) {
-        console.error('Error parsing XML:', err.message);
-      } else {
-        venuelist.forEach(async (venueid) => {
-          const filteredEvents = result.events.event.filter(event => event.venueid[0] === venueid);
+      parseString(xmldata, async (err, result) => {
+        if (err) {
+          console.error('Error parsing XML:', err.message);
+        } else {
+          venuelist.forEach(async (venueid) => {
+            const filteredEvents = result.events.event.filter(event => event.venueid[0] === venueid);
 
-          await Venue.findOneAndUpdate( //update the number of events at venue
-            { "venueId": venueid },
-            {
-              NoOfEvent: filteredEvents.length
-            },
-            { new: true },
-          );
-          // Output all events with the specified venueid
-          filteredEvents.forEach((event) => {
+            await Venue.findOneAndUpdate( //update the number of events at venue
+              { "venueId": venueid },
+              {
+                NoOfEvent: filteredEvents.length
+              },
+              { new: true },
+            );
+            // Output all events with the specified venueid
+            filteredEvents.forEach((event) => {
 
-            //check the event exist in mongodb or not
-            Event.findOne({ "eventId": event.$.id })
-              .then(async (data) => {
-                const venuedata = await Venue.find({ "venueId": event.venueid[0] });
-                if (data) {
-                  await Event.findOneAndUpdate(
-                    { "eventId": event.$.id },
-                    {
-                      eventTitle: event.titlee[0],
-                      date: event.predateE[0],
-                      Venue: venuedata[0]._id,
-                      description: event.desce[0],
-                      presenter: event.presenterorge[0],
-                      price: event.pricee[0]
-                    },
-                    { new: true },
-                  )
-                    //.then((data) => {console.log('the updated data is:', data)})
-                    .catch((error) => console.log(error));
-                  console.log("Event Updated");
-                } else {
+              //check the event exist in mongodb or not
+              Event.findOne({ "eventId": event.$.id })
+                .then(async (data) => {
+                  const venuedata = await Venue.find({ "venueId": event.venueid[0] });
+                  if (data) {
+                    await Event.findOneAndUpdate(
+                      { "eventId": event.$.id },
+                      {
+                        eventTitle: event.titlee[0],
+                        date: event.predateE[0],
+                        Venue: venuedata[0]._id,
+                        description: event.desce[0],
+                        presenter: event.presenterorge[0],
+                        price: event.pricee[0]
+                      },
+                      { new: true },
+                    )
+                      //.then((data) => {console.log('the updated data is:', data)})
+                      .catch((error) => console.log(error));
+                    console.log("Event Updated");
+                  } else {
 
-                  var newEvent = new Event();
-                  newEvent.eventId = event.$.id;
-                  newEvent.eventTitle = event.titlee[0];
-                  newEvent.date = event.predateE[0];
-                  newEvent.Venue = venuedata[0]._id;
-                  await newEvent.save();
-                }
-              });
+                    var newEvent = new Event();
+                    newEvent.eventId = event.$.id;
+                    newEvent.eventTitle = event.titlee[0];
+                    newEvent.date = event.predateE[0];
+                    newEvent.Venue = venuedata[0]._id;
+                    await newEvent.save();
+                  }
+                });
+            })
           })
-
-          /* console.log(`Event ${i + 1}:`);
-          console.log(`  Title (Chinese): ${event.titlec[0]}`);
-          console.log(`  Title (English): ${event.titlee[0]}`);
-          console.log(`  Date (Chinese): ${event.predateC[0]}`);
-          console.log(`  Date (English): ${event.predateE[0]}`);
-          console.log(`  Venue ID: ${event.venueid[0]}`);
-          console.log('------------------------'); */
-
-        })
-      }
+        }
+      })
     })
-  })
-  .catch(error => {
-    console.error('Error fetching venues:', error);
-  });
+    .catch(error => {
+      console.error('Error fetching venues:', error);
+    });
+    res.setHeader('Content-Type', 'text/plain');
+    res.send("Updated");
+});
 
 app.get('/locationAll', (req, res) => {
   Venue.find({})
@@ -198,7 +192,14 @@ app.get('/locationAll', (req, res) => {
     })
     .catch((error) => console.log(error));
 });
-
+app.post('/locationOne', (req, res) => {
+  Venue.findOne({venueId:req.body.venueId})
+    .then(async (data) => {
+      res.setHeader('Content-Type', 'text/plain');
+      res.send(data);
+    })
+    .catch((error) => console.log(error));
+});
 app.post('/search', (req, res) => {
   let keyword=req.body.keyword;
   Venue.find({venueName:{ $regex: keyword, $options: 'i' }})
@@ -208,7 +209,21 @@ app.post('/search', (req, res) => {
     })
     .catch((error) => console.log(error));
 });
-
+app.post('/searchevent', (req, res) => {
+  const venueId = req.body.venueId;
+  Venue.findOne({ venueId: venueId })
+    .then(async (data) => {
+      const id = data._id;
+      const name=data.venueName;
+      await Event.find({ Venue: id })
+        .then((eventdata) => {
+          
+          res.setHeader('Content-Type', 'text/plain');
+          res.send(eventdata);
+        })
+    })
+    .catch((error) => console.log(error));
+});
 
 app.post('/register', (req, res) => {
   return loginHandler.register(req, res);

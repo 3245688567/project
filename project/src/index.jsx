@@ -131,7 +131,7 @@ class Home extends React.Component {
 class Content extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { data: [], order: 0,keyword:``};//order: 0=ascending, 1=descending
+    this.state = { data: [], order: 0, keyword: ``, updatetime: 0 };//order: 0=ascending, 1=descending
   }
 
   async componentDidMount() {
@@ -204,9 +204,10 @@ class Content extends React.Component {
         <>
 
           <main className="container">
-
-
-            <h2>Cultural Programmes</h2>
+              <div class="row">
+              <h2 class="col-sm-8">Cultural Programmes</h2>
+              <h6 class="col-sm-2 align-items-right">Last updated on: {this.state.updatetime.toLocaleString()}</h6>
+            </div>
             <div class="row align-items-center">
               <label class="col-sm-2 col-form-label col-form-label-lg">Search for location:</label>
               <div class="col-sm-4">
@@ -464,21 +465,106 @@ class Content extends React.Component {
 class Table extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { sort: this.props.order };
+    this.state = { sort: this.props.order};
   }
+
   render() {
-    let i= this.props.i;
-    let data =this.props.data;
+    let i = this.props.i;
+    let data = this.props.data;
     return (
-      <tr>
-      <th scope="row">{i+1}</th>
-      <td>{data.venueName}</td>
-      <td>{data.NoOfEvent}</td>
-    </tr>
+      <>
+        <tr>
+          <th scope="row" >{i + 1}</th>
+          <td>{data.venueName}</td>
+          <td>{data.NoOfEvent}</td>
+          <td><Link to={`/detail/?id=${data.venueId}`}
+              className="btn btn-light" onClick={()=>venueId=data.venueId}
+          >Detail</Link></td>
+        </tr>
+      </>
     );
   }
 }
 
+class Detail extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { data: [],venuedata:[] };
+  }
+
+  async componentDidMount() {
+    const string =window.location.search;
+    const params = new URLSearchParams(string);
+    //console.log(params.get('id'));
+    const data = {venueId:params.get('id')};
+    await fetch('http://localhost:3001/locationOne', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+      .then((response) => response.json())
+      .then((venueData) => {
+        this.setState({ venuedata: venueData })
+      }
+      );
+
+    await fetch('http://localhost:3001/searchevent', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+      .then((response) => response.json())
+      .then((responseData) => {
+        this.setState({ data: responseData })
+      }
+      );
+  }
+  render() {
+    const data = this.state.data;
+    console.log(this.props);
+    return (
+      <div class="container">
+        <h2>{this.state.venuedata.venueName}</h2>
+        <br></br>
+        <h3>All event detail: </h3>
+        <div class="col-sm-10">
+          <table class="table table-borderless table-hover">
+            {data.map((data, index) => (
+              <div>
+                <tr>
+                  <th scope="row">Event title:</th>
+                  <td>{data.eventTitle}</td>
+                </tr>
+                <tr>
+                  <th scope="row">Date:</th>
+                  <td>{data.date}</td>
+                </tr>
+                <tr>
+                  <th scope="row">Description:</th>
+                  <td>{data.description}</td>
+                </tr>
+                <tr>
+                  <th scope="row">Presenter</th>
+                  <td>{data.presenter}</td>
+                </tr>
+                <tr>
+                  <th scope="row">Price:</th>
+                  <td>{data.price}</td>
+                </tr>
+                <hr />
+              </div>
+            ))}
+          </table>
+        </div>
+        <div id="map" class="col-sm-5"></div>
+      </div>
+    )
+  }
+}
 
 class NoMatch extends React.Component {
   render() {

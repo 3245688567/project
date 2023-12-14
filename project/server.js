@@ -67,6 +67,7 @@ const Event = mongoose.model("Event", EventSchema);
 const Venue = mongoose.model("Venue", VenueSchema);
 const venuelist = ['3110031', '36310035', '50110014', '75010017', '76810048', '87510008', '87610118', '87810042', '87310051', '87110024'];
 //fetch Venue XML
+app.get('/update', (req, res) => {
 fetch('https://www.lcsd.gov.hk/datagovhk/event/venues.xml')
   .then(async response => await response.text())
   .then(data => {

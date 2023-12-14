@@ -36,7 +36,8 @@ class App extends React.Component {
           <Routes>
             <Route path="/" element={(login === 0) ? <LoginPage /> : <Home />  } />
             <Route path="/content" element={(login === 0) ? <LoginPage /> : <Content /> } />
-            <Route path="/home" element={(login === 0) ? <LoginPage /> : <Home /> } />            
+            <Route path="/home" element={(login === 0) ? <LoginPage /> : <Home /> } /> 
+            <Route path="/detail/*" element={(login === 0) ? <LoginPage /> : <Detail />} />
             <Route path="*" element={<NoMatch />} />
           </Routes>
         </BrowserRouter>
@@ -136,7 +137,7 @@ class Content extends React.Component {
 
   async componentDidMount() {
     console.log("test..");
-    await fetch('http://localhost:3001/locationAll', { 
+    await fetch('http://localhost:3001/locationAll', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -147,6 +148,15 @@ class Content extends React.Component {
         this.setState({ data: responseData })
       }
       );
+
+    await fetch('http://localhost:3001/update', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    })
+    this.setState({ updatetime: new Date() })
+
   }
   async search(keyword){
     const data={keyword:keyword};

@@ -83,39 +83,40 @@ class Home extends React.Component {
     return (
       <div style={{textAlign:"center"}}>
         <h2>The Introduction of Our Project</h2>
+        <br></br>
         <p>
         <div class="container mt-3">
             <table class="table">
               <thead class="table-secondary">
                 <tr>
-                  <th>Company</th>
-                  <th>His Career</th>
+                  <th>Catogories</th>
+                  <th>Details</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>Zip2 Corporation (1995-1999)</td>
-                  <td>Elon Musk co-founded Zip2, a software company providing business directories and maps for newspapers and the company was later acquired by Compaq for $307 million. This is his first financial success.</td>
+                  <td>Our Group Members</td>
+                  <td></td>
                 </tr>
                 <tr>
-                  <td>X.com and PayPal (1999-2002)</td>
-                  <td>Elon Musk founded X.com, the Paypal's predecessor. This company later growed rapidly and was acquired by eBay in 2002 for $1.5 billion, becoming another financial success for him.</td>
+                  <td>Work Distribution</td>
+                  <td></td>
                 </tr>
                 <tr>
-                  <td>SpaceX (2002-present)</td>
-                  <td>In 2002, Elon Musk founded SpaceX, aiming at reducing the cost of space travel and making space travel comes true. This is the world's first privately-funded company to send a spacecraft to orbit and to dock with the International Space Station (ISS).</td>
+                  <td>DataSet</td>
+                  <td></td>
                 </tr>
                 <tr>
-                  <td>Tesla, Inc. (2004-present)</td>
-                  <td>Elon Musk joined Tesla Motors, an electric vehicle company, as chairman and later became the CEO. Company later achieved the greatest sales on electric vehices in the world.</td>
+                  <td>The Usage of Different Files</td>
+                  <td></td>
                 </tr>
                 <tr>
-                  <td>Neuralink (2016-present)</td>
-                  <td>Elon Musk co-founded Neuralink, a neurotechnology company focusing on inventing the technology of implantable brain-machine interfaces.</td>
+                  <td>Schema and Model</td>
+                  <td></td>
                 </tr>
                 <tr>
-                  <td>The Boring Company (2016-present)</td>
-                  <td>Elon Musk established The Boring Company aiming to revolutionize the current tunneling and transportation systems. One of the famous idea is Hyperloop.</td>
+                  <td>Addtional Features</td>
+                  <td></td>
                 </tr>
               </tbody>
             </table>
@@ -261,9 +262,9 @@ class Content extends React.Component {
                  <br></br>
                  <input type="text" id="Cedate" name="Cedate" placeholder="1/1/2024"></input>
                  <br></br>
-                 <label for="Cevenue">Event Venue Name: </label>
+                 <label for="Cevenue">Event Venue ID: </label>
                  <br></br>
-                 <input type="text" id="Cevenue" name="Cevenue" required></input>
+                 <input type="number" id="Cevenue" name="Cevenue" required></input>
                  <br></br>
                  <label for="CeDes">Event Description: </label>
                  <br></br>
@@ -310,9 +311,9 @@ class Content extends React.Component {
               </form>
               <br></br><br></br>
               <form id="REventByVenue">
-                 <label for="Revenue">By Venue: </label>
+                 <label for="Revenue">By Venue ID: </label>
                  <br></br>
-                 <input type="text" id="Revenue" name="Revenue" required></input>
+                 <input type="number" id="Revenue" name="Revenue" required></input>
                  <br></br>
                  <input type="submit" value="Find"></input>
               </form>
@@ -335,9 +336,9 @@ class Content extends React.Component {
                  <br></br>
                  <input type="text" id="Uedate" name="Uedate" placeholder="1/12/2024"></input>
                  <br></br>
-                 <label for="Uevenue">Update Event Venue Name: </label>
+                 <label for="Uevenue">Update Event Venue ID: </label>
                  <br></br>
-                 <input type="text" id="Uevenue" name="Uevenue"></input>
+                 <input type="number" id="Uevenue" name="Uevenue"></input>
                  <br></br>
                  <label for="UeDes">Add/Change Event Description: </label>
                  <br></br>
@@ -378,7 +379,7 @@ class Content extends React.Component {
             </span>
             
             </span>
-            <script>
+        <script>
 
         </script>
         </div>
@@ -452,9 +453,6 @@ class Content extends React.Component {
               </body>
             </span>
             </span>
-        <script>
-          
-        </script>
         </div>
         </section>
 
@@ -487,5 +485,9 @@ class NoMatch extends React.Component {
     return <h2>Page not found</h2>;
   }
 }
+
+  
+
+
 const root = ReactDOM.createRoot(document.querySelector('#app'));
 root.render(<App name="Cultural Programmes" />);

@@ -1,3 +1,5 @@
+
+const loginHandler = require('./src/backend/userHandler.js');
 //npm install xml2js cors mongoose express
 const express = require('express');
 const app = express();
@@ -6,7 +8,7 @@ const { parseString } = require('xml2js');
 
 const cors = require('cors');
 
-const loginHandler = require('./src/backend/userHandler.js');
+//const loginHandler = require('./src/backend/userHandler.js');
 
 app.use(cors());
 app.use(express.json());
@@ -199,7 +201,7 @@ app.get('/locationAll', (req, res) => {
 });
 
 app.post('/search', (req, res) => {
-  keyword=req.body.keyword;
+  let keyword=req.body.keyword;
   Venue.find({venueName:{ $regex: keyword, $options: 'i' }})
     .then(async (data) => {
       res.setHeader('Content-Type', 'text/plain');

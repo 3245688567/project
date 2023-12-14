@@ -9,6 +9,32 @@ const UserSchema = mongoose.Schema({
 });
 const User = mongoose.model('User', UserSchema);
 
+const hashedAdmin = bcrypt.hashSync("admin", bcrypt.genSaltSync(10));
+
+//Create a default admin account
+User.findOne({ userType: "admin" })
+.then((data)=>{
+    if(!data)
+    {
+        let Admin = new User({
+            username: "admin",
+            password: hashedAdmin,
+            userType: "admin"
+            });
+        
+            //Saving this new event to database
+            Admin
+            .save()
+            .then(() => {
+              console.log("admin account is created");
+            })
+            .catch((error) => {
+              console.log("fail to create the admin account");
+              console.log(error);
+            });
+    }
+})
+
 module.exports.register = async function (req, res) {
     const { username, password } = req.body;
 
@@ -43,8 +69,12 @@ module.exports.login = async function (req, res) {
     if (!match)
         return res.json({ error: "User not found or password is incorrect." });
 
-    if(user.userType === 'admin')
+    if(user.userType === 'admin'){
+        this.login = 2;
         return res.json({ admin: "Login as admin." });
-    else if(user.userType === 'user')
+    }
+    else if(user.userType === 'user'){
+        this.login = 1;
         return res.json({ user: "Login as user." });
+    }
 }

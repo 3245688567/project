@@ -3,7 +3,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom';
 import LoginPage from './frontend/LoginPage'
 
-var login = 0;   //0=non-user, 1=user, 2=admin, will show different content in "Content"&"Login"&"Title" page
+var login = 0;   //0=non-user, 1=user, 2=admin, will show different content in "Content"&"Title"
 
 
 class App extends React.Component {
@@ -48,7 +48,8 @@ class App extends React.Component {
 class Title extends React.Component {
   handleLogout = () => {
     sessionStorage.clear();
-    window.location.href = "/"; 
+    window.location.href = "/";
+    login=0;
   };
 
   render() {

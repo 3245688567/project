@@ -16,6 +16,6 @@ I change a little bit on the UI, basically introduce a global var "login"=0. Whe
 
 1. Chan Cho Kit
 fix the bug of cannot register/login an admin ac
-bug1. cannot register an user ac ('Fail to login due to unknown error')
+bug1. cannot register an user ac ('Fail to register due to unknown error')
 bug2. after login as an admin, the web cannot GET "/". But if you terminate "node server.js" and reload, it works. Same situation happens in logout
 

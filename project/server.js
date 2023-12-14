@@ -8,8 +8,10 @@ const cors = require('cors');
 
 const loginHandler = require('./src/backend/userHandler.js');
 
+
 app.use(cors());
 app.use(express.json());
+
 
 
 const mongoose = require('mongoose');
@@ -590,20 +592,26 @@ app.delete('/event/:eventtitle', (req, res) => {
     }
 
 })
-})
+});
 
+app.post('/addfav', (req, res) => {
+  return loginHandler.addfav(req, res);
+});
 
+app.post('/loaduser', async (req, res) => {
+  let fav= await loginHandler.user(req, res);
+  const resdata=[];
+  await Promise.all(fav.map(async (favItem) => {
+    let num = Number(favItem);
+    let data = await Venue.findOne({ venueId: num });
 
+    if (data) {
+      resdata.push(data.venueName);
+    }
+  }));
 
-
-
-
-
-
-
-
-
-
-
+  res.setHeader('Content-Type', 'application/json');
+  res.send(resdata);
+});
 
 const server = app.listen(3001);

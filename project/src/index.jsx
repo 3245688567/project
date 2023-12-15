@@ -109,15 +109,6 @@ class Home extends React.Component {
                   <li>FONG Ka Wai, 1155177052</li></td>
                 </tr>
                 <tr>
-                  <td>Work Distribution</td>
-                  <td style={{ textAlign: "left" }}>
-                    <li>CAO Yujie, 1155174003: UI design, </li>
-                    <li>CHAN Cho Kit, 1155175546: UI desgin, Admin: All CRUD, User: Show Price below a specific nmuber</li>
-                    <li>CHOW Ka Po, 1155136405: UI design, </li>
-                    <li>DONG Zhi Lin, 1155159370: UI design, </li>
-                    <li>FONG Ka Wai, 1155177052: UI design, Data extraction from gov database, All functions in user action</li></td>
-                </tr>
-                <tr>
                   <td>DataSet</td>
                   <td style={{ textAlign: "left" }}>Cultural Programmes of Hong Kong in 10 locations, they are:
                   <li>Sha Tin Town Hall (Auditorium)</li>

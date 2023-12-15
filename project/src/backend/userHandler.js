@@ -160,7 +160,32 @@ module.exports.ReadUser = async function (req, res) {
         RMess += ("{\n\"username\":" + data.username +
           ",\n\"(Hashed) password\":" + data.password +
           ",\n\"userType\":" + data.userType +
+          ",\n\"fav\":" + data.fav +
           "\n}\n");
+        res.contentType('text/plain')
+        res.status(200).send(RMess);
+
+      }
+    })
+}
+
+module.exports.ReadAllUser = async function (req, res) {
+  let RMess = "";
+  User.find({})
+    .then((data) => {
+      if (data == "") {
+        RMess += ('No Users');
+        res.contentType('text/plain');
+        res.status(404).send(RMess);
+      }
+      else {
+        for(let i = 0; i<data.length ;i++){
+        RMess += ("{\n\"username\":" + data[i].username +
+          ",\n\"(Hashed) password\":" + data[i].password +
+          ",\n\"userType\":" + data[i].userType +
+          ",\n\"fav\":" + data[i].fav +
+          "\n}\n");
+        }
         res.contentType('text/plain')
         res.status(200).send(RMess);
 

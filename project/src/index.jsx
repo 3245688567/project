@@ -2,8 +2,9 @@ import ReactDOM from 'react-dom/client';
 import React from 'react';
 import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom';
 import LoginPage from './frontend/LoginPage'
+import axios from "axios";
 
-var login = 0;   //0=non-user, 1=user, 2=admin, will show different content in "Content"&"Title"
+var login = 0;   //0=non-user, 1=user, 2=admin, will show different content in different pages
 
 
 class App extends React.Component {
@@ -101,20 +102,20 @@ class Home extends React.Component {
                 <tr>
                   <td>Our Group Members</td>
                   <td style={{ textAlign: "left" }}>Group 39:  
-                  <li>CAO Yujie1155174003</li>
-                  <li>CHAN Cho Kit 1155175546</li>
-                  <li>CHOW Ka Po 1155136405</li>
-                  <li>DONG Zhi Lin 1155159370</li>
-                  <li>FONG Ka Wai 1155177052</li></td>
+                  <li>CAO Yujie, 1155174003</li>
+                  <li>CHAN Cho Kit, 1155175546</li>
+                  <li>CHOW Ka Po, 1155136405</li>
+                  <li>DONG Zhi Lin, 1155159370</li>
+                  <li>FONG Ka Wai, 1155177052</li></td>
                 </tr>
                 <tr>
                   <td>Work Distribution</td>
                   <td style={{ textAlign: "left" }}>
-                    <li>CAO Yujie 1155174003:</li>
-                    <li>CHAN Cho Kit 1155175546: Admin CRUD</li>
-                    <li>CHOW Ka Po 1155136405: </li>
-                    <li>DONG Zhi Lin 1155159370: </li>
-                    <li>FONG Ka Wai 1155177052: data extraction from gov database, all functions in user action</li></td>
+                    <li>CAO Yujie, 1155174003: UI design, </li>
+                    <li>CHAN Cho Kit, 1155175546: UI desgin, Admin: All CRUD, User: Show Price below a specific nmuber</li>
+                    <li>CHOW Ka Po, 1155136405: UI design, </li>
+                    <li>DONG Zhi Lin, 1155159370: UI design, </li>
+                    <li>FONG Ka Wai, 1155177052: UI design, Data extraction from gov database, All functions in user action</li></td>
                 </tr>
                 <tr>
                   <td>DataSet</td>
@@ -138,6 +139,13 @@ class Home extends React.Component {
                   <li>server.js: the server-side functions</li>
                   <li>userHandler.js in \src\backend folder: the extended server-side functions for the User Schema</li>
                   <li>LoginPage.js in \src\frontend folder: the extended client-side functions on Login Page</li>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Installation of npm Packages</td>
+                  <td style={{ textAlign: "left" }}>
+                  <li>for React: "npm install react react-dom react-scripts" & "npm install react-router-dom"</li>
+                  <li>for MongoDB: "npm install xml2js cors mongoose express bcrypt axios"</li>
                   </td>
                 </tr>
                 <tr>
@@ -171,7 +179,9 @@ class Content extends React.Component {
     this.ReadEventByName = this.ReadEventByName.bind(this);
     this.ReadEventByDate = this.ReadEventByDate.bind(this);
     this.ReadEventByVenue = this.ReadEventByVenue.bind(this);
+    this.ReadAllEvents = this.ReadAllEvents.bind(this);
     this.ReadUser = this.ReadUser.bind(this);
+    this.ReadAllUser = this.ReadAllUser.bind(this);
   }
 
   async componentDidMount() {
@@ -187,7 +197,7 @@ class Content extends React.Component {
         this.setState({ data: responseData })
       }
       );
-
+    
     await fetch('http://localhost:3001/update', {
       method: 'GET',
       headers: {
@@ -197,6 +207,7 @@ class Content extends React.Component {
     this.setState({ updatetime: new Date() })
 
   }
+
   async search(keyword) {
     const data = { keyword: keyword };
     console.log(data);
@@ -213,9 +224,12 @@ class Content extends React.Component {
       }
       );
   }
+  
+  
   setkeyword = (keyword) => {
     this.setState({ keyword: keyword })
   }
+
   SortTable(data) {
     console.log("sort...");
     if (this.state.order === 0) {
@@ -289,7 +303,7 @@ async ReadEventByID(event) {
     method: 'GET',
   });
   const resultPage = await response.text();
-  alert(resultPage);
+  alert("Read Successfully");
   this.setState({ result: resultPage })
   };
 
@@ -300,7 +314,7 @@ async ReadEventByName(event) {
       method: 'GET',
   });
   const resultPage = await response.text();
-  alert(resultPage);
+  alert("Read Successfully");
   this.setState({ result: resultPage })
   };
 
@@ -311,7 +325,7 @@ async ReadEventByDate(event) {
       method: 'GET',
   });
   const resultPage = await response.text();
-  alert(resultPage);
+  alert("Read Successfully");
   this.setState({ result: resultPage })
   };
 
@@ -323,10 +337,19 @@ async ReadEventByVenue(event) {
       method: 'GET',
   });
   const resultPage = await response.text();
-  alert(resultPage);
+  alert("Read Successfully");
   this.setState({ result: resultPage })
   };
 
+async ReadAllEvents(event) {
+    event.preventDefault();
+    const response = await fetch('http://localhost:3001/eventAll', {
+        method: 'GET',
+    });
+    const resultPage = await response.text();
+    alert("Read Successfully");
+    this.setState({ result: resultPage })
+    };
 //U
 async UpdateEvent(event) {
   event.preventDefault();
@@ -444,13 +467,19 @@ async ReadUser(event) {
     method: 'GET',
   });
   const resultPage = await response.text();
-  alert(resultPage);
+  alert("Read Successfully");
   this.setState({ result: resultPage })
   };
 
-
-
-
+async ReadAllUser(event) {
+    event.preventDefault();
+    const response = await fetch('http://localhost:3001/alluser/', {
+      method: 'GET',
+    });
+    const resultPage = await response.text();
+    alert("Read Successfully");
+    this.setState({ result: resultPage })
+    };
 
 //U
 async UpdateUser(event) {
@@ -506,15 +535,19 @@ async DeleteUser(event) {
   render() {
     const data = this.state.data;
     let keyword = this.state.keyword;
+    
     if (login === 1) {
       return (
         <>
 
           <main className="container">
             <div class="row">
-              <h2 class="col-sm-8">Cultural Programmes</h2>
-              <h6 class="col-sm-2 align-items-right">Last updated on: {this.state.updatetime.toLocaleString()}</h6>
+              <h2 class="col-sm-9">Cultural Programmes</h2>
+              <br></br>
+              <h6 class="col-sm-3 align-items-right">Last updated on: {this.state.updatetime.toLocaleString()}</h6>
             </div>
+
+            
             <div class="row align-items-center">
               <label class="col-sm-2 col-form-label col-form-label-lg">Search for location:</label>
               <div class="col-sm-4">
@@ -540,6 +573,11 @@ async DeleteUser(event) {
                 ))}
               </tbody>
             </table>
+            
+            <br></br>
+            <br></br>
+
+            
           </main>
         </>
       );
@@ -628,6 +666,8 @@ async DeleteUser(event) {
                  <br></br>
                  <input type="submit" value="Find"></input>
               </form>
+              <br></br>
+            <button onClick={this.ReadAllEvents}>Find All</button>
             </body>
             </span>
             <span class="col-sm-3">
@@ -723,6 +763,8 @@ async DeleteUser(event) {
                  <br></br><br></br>
                  <input type="submit" value="Find"></input>
               </form>
+            <br></br>
+            <button onClick={this.ReadAllUser}>Find All</button>
             </body>
             </span>
             <span class="col-sm-3">
@@ -796,7 +838,8 @@ class Table extends React.Component {
 class Detail extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { data: [], venuedata: [] ,add:0};
+    this.state = { data: [], venuedata: [] ,add:0, value:"Hello Hong Kong", result:""};
+    this.searcheventprice = this.searcheventprice.bind(this);
   }
 
   async componentDidMount() {
@@ -828,6 +871,21 @@ class Detail extends React.Component {
         this.setState({ data: responseData })
       }
       );
+    
+    await fetch('http://localhost:3001/comment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(result)
+          this.setState({result: result})
+        }
+        );
+      
   }
   
   async favhandler(add,venueId,username){
@@ -850,6 +908,46 @@ class Detail extends React.Component {
       }
       ); 
   }
+
+  async searcheventprice(event,id) {
+    event.preventDefault();
+    const price = event.target.elements.Price.value;
+    const vid = id;
+    const data = { vid: vid, price: price };
+    await fetch('http://localhost:3001/searcheventprice', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+      .then((response) => response.json())
+      .then((responseData) => {
+        this.setState({ data: responseData })
+      }
+      );
+  }
+
+  setkeyword = (value) => {
+    this.setState({ value: value })
+  }
+
+  
+  sendDate = () => {
+    //     进行网络请求
+  
+        axios.post('http://localhost:3001/addcomment', {
+            data:{
+                comment:this.state.value,
+                  venueId:this.state.venuedata.venueId,
+            }
+        }).then(res=>{
+            console.log(res.data)
+            this.setState({result: res.data})
+            alert("One comment is added")
+        //     更新数据
+        })
+    }
 
   render() {
     const data = this.state.data;
@@ -880,8 +978,19 @@ class Detail extends React.Component {
         </div>
         <iframe src={map[id]} width="400" height="300" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         <br></br>
-        
-        <h3>All event detail: </h3>
+        <div class="row">
+        <div class="col-sm-5"><h3>All event detail: </h3></div>
+        <div class="col-sm-7">
+        <div class="row">
+          <form id="MaxPrice" onSubmit={(event) =>this.searcheventprice(event,id)}>
+                 <label for="Price" class="col-form-label col-form-label-lg">Search Maximum Price: &emsp;</label>
+                 <input type="number" id="Price" name="Price" placeholder="HKD"></input>&emsp;
+                 <input type="submit" value="Search"></input>
+          </form>
+        </div>
+        </div>
+        </div>
+        <br></br>
         <div class="col-sm-10">
           <table class="table table-borderless table-hover">
             {data.map((data, index) => (
@@ -906,12 +1015,25 @@ class Detail extends React.Component {
                   <th scope="row">Price:</th>
                   <td>{data.price}</td>
                 </tr>
+                <button class="btn btn-primary">Like &#128077;</button>
                 <hr/>
               </div>
             ))}
           </table>
         </div>
-        <div id="map" class="col-sm-5"></div>
+        <div class="row">
+        <div id="comments" class="col-sm-5">
+              <h1>Comments:</h1>
+              {this.state.result}
+
+        </div>
+        <div id="map" class="col-sm-5">
+        <h1>Comments:</h1>
+        <textarea value={this.state.value} style={{width: "100%", height: "100px"}} placeholder="please input message" onChange={(e) => this.setkeyword(e.target.value)}></textarea>
+        <button onClick={this.sendDate}>Submit</button>
+
+        </div>
+        </div>
       </div>
     )
   }
@@ -942,14 +1064,17 @@ class User extends React.Component {
     const data=this.state.data;
     return (
       <>
-      <div class="container">
-        <h2> favourite locations</h2>
+      <div class="container" style={{ textAlign: "center" }}>
+        <h2>My Favourite locations</h2>
+        <br></br>
+        <div class="container p-5 my-5 border">
         {data.map((element, index) => (
                   <tr>
                   <th scope="row" >{index + 1}. </th>
                   <td>{element}</td>
                 </tr>
                 ))}
+          </div>
       </div>
       </>
     );

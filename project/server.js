@@ -40,7 +40,11 @@ const VenueSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  NoOfEvent: { type: Number, required: true }
+  NoOfEvent: { type: Number, required: true },
+  comments: [{
+    type : Array,
+    default : []
+  }]
 });
 
 const EventSchema = mongoose.Schema({
@@ -185,9 +189,36 @@ fetch('https://www.lcsd.gov.hk/datagovhk/event/venues.xml')
     res.send("Updated");
 });
 
+app.get('/eventAll', (req, res) => {
+  Event.find({})
+    .populate('Venue')
+    .then(async (data) => {
+      let Message = "";
+      for(let i = 0; i<data.length; i++){
+        Message += ("{\n\"eventId\":"+ data[i].eventId +
+        ",\n\"eventTitle\":"+ data[i].eventTitle + 
+        ",\n\"date\":"+ data[i].date +
+        ",\n\"Venue\":" +
+        "\n{\n\"venueId\":"+ data[i].Venue.venueId +
+        ",\n\"venueName\":"+ data[i].Venue.venueName +
+        ",\n\"latitude\":"+ data[i].Venue.latitude +
+        ",\n\"longtitude\":"+ data[i].Venue.longitude +
+        ",\n\"NoOfEvent\":"+ data[i].Venue.NoOfEvent +
+        "\n}\n\"description\":"+ data[i].description +
+        ",\n\"presenter\":"+ data[i].presenter +
+        ",\n\"price\":"+ data[i].price +
+        "\n}\n");
+        }
+      res.setHeader('Content-Type', 'text/plain');
+      res.send(Message);
+    })
+    .catch((error) => console.log(error));
+});
+
 app.get('/locationAll', (req, res) => {
   Venue.find({})
     .then(async (data) => {
+      console.log(data);
       res.setHeader('Content-Type', 'text/plain');
       res.send(data);
     })
@@ -234,6 +265,23 @@ app.post('/login', (req, res) => {
   return loginHandler.login(req, res);
 })
 
+app.post('/searcheventprice', (req, res) => {
+  let price=req.body.price;
+  let vid=req.body.vid;
+  Venue.findOne({venueId: vid})
+    .then((dataV) => {
+      console.log(dataV._id);
+      Event.find({Venue: dataV._id, price: "Free admission by tickets"})
+      .then((data) => {
+        console.log(data);
+        res.setHeader('Content-Type', 'text/plain');
+        res.send(data);
+        
+    })
+    .catch((error) => console.log(error));
+  })
+  .catch((error) => console.log(error));
+});
 //CRUD stored events
 //C
 app.post('/event/', (req, res) => {
@@ -314,7 +362,7 @@ app.get('/event/byid/:eventID',  (req, res) => {
       res.status(404).send(RMessage);
     }
     else {
-      RMessage += ("{\n\"eventId\":"+ eID +
+      RMessage += ("{\n\"eventId\":"+ data.eventId +
       ",\n\"eventTitle\":"+ data.eventTitle + 
       ",\n\"date\":"+ data.date +
       ",\n\"Venue\":" +
@@ -560,6 +608,48 @@ app.delete('/event/byname/:eventtitle', (req, res) => {
 })
 })
 
+app.post('/comment', (req, res) => {
+  let id  = req.body.venueId;
+  Venue.findOne({venueId:{ $eq: id }})
+  .then((data)=>{
+    let result = ``;
+          for(let i=0; i<data.comments.length;i++)
+          {
+            result += `${i+1}. ${data.comments[i].toString()},`
+          }
+          result += ``;
+            res.contentType('text/plain');
+            res.status(200).send(result);
+  })
+})
+
+app.post('/addcomment', (req, res) => {
+  let id  = req.body.data.venueId;
+  let comment = req.body.data.comment;
+//     添加评论
+  // 在 venue 中添加评论
+    Venue.findOneAndUpdate(
+        {venueId:{ $eq: id }},
+        {$push: {comments:comment}},
+        {new: true}) // 返回修改后的数据
+    .then((data) => {
+      console.log(id,comment,data.comments)
+        if (data === "[]"){
+            res.contentType('text/plain');
+            res.status(404).send("no such data");
+        }
+        else {
+          let result = ``;
+          for(let i=0; i<data.comments.length;i++)
+          {
+            result += `${i+1}. ${data.comments[i].toString()}`
+          }
+            res.contentType('text/plain');
+            res.status(201).send(result);
+        }
+    })
+})
+
 //CRUD stored users
 //C
 app.post('/user/', (req, res) => {
@@ -569,6 +659,10 @@ app.post('/user/', (req, res) => {
 //R
 app.get('/user/:username', (req, res) => {
   return loginHandler.ReadUser(req, res);
+});
+
+app.get('/alluser/', (req, res) => {
+  return loginHandler.ReadAllUser(req, res);
 });
 
 //U

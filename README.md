@@ -19,3 +19,8 @@ fix the bug of cannot register/login an admin ac
 bug1. cannot register an user ac ('Fail to register due to unknown error')
 bug2. after login as an admin, the web cannot GET "/". But if you terminate "node server.js" and reload, it works. Same situation happens in logout
 
+15/12:
+
+1. Chan Cho Kit
+The admin CRUD part is done. Please fill in your Work Distribution on Home page.
+

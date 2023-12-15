@@ -100,27 +100,58 @@ class Home extends React.Component {
               <tbody>
                 <tr>
                   <td>Our Group Members</td>
-                  <td></td>
+                  <td style={{ textAlign: "left" }}>Group 39:  
+                  <li>CAO Yujie1155174003</li>
+                  <li>CHAN Cho Kit 1155175546</li>
+                  <li>CHOW Ka Po 1155136405</li>
+                  <li>DONG Zhi Lin 1155159370</li>
+                  <li>FONG Ka Wai 1155177052</li></td>
                 </tr>
                 <tr>
                   <td>Work Distribution</td>
-                  <td></td>
+                  <td style={{ textAlign: "left" }}>
+                    <li>CAO Yujie 1155174003:</li>
+                    <li>CHAN Cho Kit 1155175546: Admin CRUD</li>
+                    <li>CHOW Ka Po 1155136405: </li>
+                    <li>DONG Zhi Lin 1155159370: </li>
+                    <li>FONG Ka Wai 1155177052: </li></td>
                 </tr>
                 <tr>
                   <td>DataSet</td>
-                  <td></td>
+                  <td style={{ textAlign: "left" }}>Cultural Programmes of Hong Kong in 10 locations, they are:
+                  <li>Sha Tin Town Hall (Auditorium)</li>
+                  <li>North District Town Hall (Auditorium)</li>
+                  <li>Ko Shan Theatre (Theatre)</li>
+                  <li>Sheung Wan Civic Centre (Theatre)</li>
+                  <li>Yuen Long Theatre (Auditorium)</li>
+                  <li>Kwai Tsing Theatre (Dance Studio)</li>
+                  <li>Hong Kong Cultural Centre (Concert Hall)</li>
+                  <li>Hong Kong Film Archive (Cinema)</li>
+                  <li>Tuen Mun Town Hall (Auditorium)</li>
+                  <li>Hong Kong City Hall (Concert Hall)</li></td>
                 </tr>
                 <tr>
                   <td>The Usage of Different Files</td>
-                  <td></td>
+                  <td style={{ textAlign: "left" }}>
+                  <li>index.html in \public folder: the basic structure of the web page and the linking to the bundled .css .js files</li>
+                  <li>index.jsx in \src folder: the client-side functions</li>
+                  <li>server.js: the server-side functions</li>
+                  <li>userHandler.js in \src\backend folder: the extended server-side functions for the User Schema</li>
+                  <li>LoginPage.js in \src\frontend folder: the extended client-side functions on Login Page</li>
+                  </td>
                 </tr>
                 <tr>
                   <td>Schema and Model</td>
-                  <td></td>
+                  <td style={{ textAlign: "left" }}>
+                    <li>Event: eventId, eventTitle, date, Venue, description, presenter, price</li>
+                    <li>Venue: venueId, venueName, latitude, longtitude, NoOfEvent</li>
+                    <li>User: username, password, userType, fav</li></td>
                 </tr>
                 <tr>
                   <td>Addtional Features</td>
-                  <td></td>
+                  <td style={{ textAlign: "left" }}>
+                  <li>Passwords are hashed before storing in database</li>
+                  </td>
                 </tr>
               </tbody>
             </table>

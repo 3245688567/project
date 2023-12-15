@@ -8,10 +8,8 @@ const cors = require('cors');
 
 const loginHandler = require('./src/backend/userHandler.js');
 
-
 app.use(cors());
 app.use(express.json());
-
 
 
 const mongoose = require('mongoose');
@@ -252,28 +250,31 @@ app.post('/event/', (req, res) => {
   .populate("Venue")
   .then((data) => {
     if (data){
-      CMessage += ('event is already added<br></br><br></br><a href="/content">return to "Content"</a>');
+      CMessage += ('event is already added');
       res.contentType('text/plain');
       res.status(404).send(CMessage);
     }
     else {
       Venue.findOne({venueId:{ $eq: vid }})
       .then((dataV) => {
-        if (dataV === ""){
-          CMessage += ('invalid venue<br></br><br></br><a href="/content">return to "Content"</a>');
+        if (!dataV){
+          CMessage += ('invalid venue');
           res.contentType('text/plain');
           res.status(404).send(CMessage);
         }
         else{
+          console.log(dataV.NoOfEvent);
           Venue.findOneAndUpdate(
             {venueId:{ $eq: vid }},
-            {NoOfEvent: dataV[0].NoOfEvent+1},
+            {NoOfEvent: dataV.NoOfEvent + 1},
             {new: true})
-          let newEvent = new Event({
-            eventID: eid,
+          .then((dataV2) => {
+            console.log(dataV2.NoOfEvent);
+            let newEvent = new Event({
+            eventId: eid,
             eventTitle: etitle,
             date: edate,
-            Venue: quota,
+            Venue: dataV._id,
             description: edes,
             presenter: epresenter,
             price: eprice
@@ -289,23 +290,10 @@ app.post('/event/', (req, res) => {
               console.log("fail to create the event");
               console.log(error);
             });
-            CMessage += (
-            "The following event is created:<br></br>{<br></br>\"eventId\":"+ eid +
-            ",<br></br>\"eventTitle\":"+ etitle + 
-            ",<br></br>\"date\":"+ edate +
-            ",<br></br>\"Venue\":" +
-            "<br></br>{<br></br>\"venueId\":"+ vid +
-            ",<br></br>\"venueName\":"+ dataV[0].venueName +
-            ",<br></br>\"latitude\":"+ dataV[0].latitude +
-            ",<br></br>\"longtitude\":"+ dataV[0].longitude +
-            ",<br></br>\"NoOfEvent\":"+ dataV[0].NoOfEvent +
-            "<br></br>}<br></br>\"description\":"+ edes +
-            ",<br></br>\"presenter\":"+ epresenter +
-            ",<br></br>\"price\":"+ eprice +
-            "<br></br>}<br></br>"+
-            "<br></br><a href='/content'>return to 'Content'</a>");
+            CMessage += ("One event is created");
             res.contentType('text/plain');
             res.status(200).send(CMessage);
+          })
         }
       })
     }
@@ -314,32 +302,31 @@ app.post('/event/', (req, res) => {
 })
 
 //R
-app.get('/event/:eventID',  (req, res) => {
+app.get('/event/byid/:eventID',  (req, res) => {
   let eID = req.params.eventID;
   let RMessage = "";
   Event.findOne({eventId:{ $eq: eID }})
   .populate("Venue")
   .then((data) => {
-    if (data === ""){
-      RMessage += ('no such data<br></br><br></br><a href="/content">return to "Content"</a>');
+    if (!data){
+      RMessage += ('no such data');
       res.contentType('text/plain');
       res.status(404).send(RMessage);
     }
     else {
-      RMessage += ("{<br></br>\"eventId\":"+ data[0].eventId +
-      ",<br></br>\"eventTitle\":"+ data[0].eventTitle + 
-      ",<br></br>\"date\":"+ data[0].date +
-      ",<br></br>\"Venue\":" +
-      "<br></br>{<br></br>\"venueId\":"+ data[0].Venue.venueId +
-      ",<br></br>\"venueName\":"+ data[0].Venue.venueName +
-      ",<br></br>\"latitude\":"+ data[0].Venue.latitude +
-      ",<br></br>\"longtitude\":"+ data[0].Venue.longitude +
-      ",<br></br>\"NoOfEvent\":"+ data[0].Venue.NoOfEvent +
-      "<br></br>}<br></br>\"description\":"+ data[0].Venue.description +
-      ",<br></br>\"presenter\":"+ data[0].Venue.presenter +
-      ",<br></br>\"price\":"+ data[0].Venue.price +
-      "<br></br>}<br></br>"+
-      "<br></br><a href='/content'>return to 'Content'</a>");
+      RMessage += ("{\n\"eventId\":"+ eID +
+      ",\n\"eventTitle\":"+ data.eventTitle + 
+      ",\n\"date\":"+ data.date +
+      ",\n\"Venue\":" +
+      "\n{\n\"venueId\":"+ data.Venue.venueId +
+      ",\n\"venueName\":"+ data.Venue.venueName +
+      ",\n\"latitude\":"+ data.Venue.latitude +
+      ",\n\"longtitude\":"+ data.Venue.longitude +
+      ",\n\"NoOfEvent\":"+ data.Venue.NoOfEvent +
+      "\n}\n\"description\":"+ data.description +
+      ",\n\"presenter\":"+ data.presenter +
+      ",\n\"price\":"+ data.price +
+      "\n}");
       res.contentType('text/plain')
       res.status(200).send(RMessage);
     }
@@ -348,32 +335,31 @@ app.get('/event/:eventID',  (req, res) => {
 .catch((error) => console.log(error));
 })
 
-app.get('/event/:eventName',  (req, res) => {
+app.get('/event/byname/:eventName',  (req, res) => {
   let eName = req.params.eventName;
   let RMessage = "";
-  Event.findOne({eventTitle:{ $eq: eName }})
+  Event.findOne({eventTitle: eName })
   .populate("Venue")
   .then((data) => {
-    if (data === ""){
-      RMessage += ('no such data<br></br><br></br><a href="/content">return to "Content"</a>');
+    if (!data){
+      RMessage += ('no such data');
       res.contentType('text/plain');
       res.status(404).send(RMessage);
     }
     else {
-      RMessage += ("{<br></br>\"eventId\":"+ data[0].eventId +
-      ",<br></br>\"eventTitle\":"+ data[0].eventTitle + 
-      ",<br></br>\"date\":"+ data[0].date +
-      ",<br></br>\"Venue\":" +
-      "<br></br>{<br></br>\"venueId\":"+ data[0].Venue.venueId +
-      ",<br></br>\"venueName\":"+ data[0].Venue.venueName +
-      ",<br></br>\"latitude\":"+ data[0].Venue.latitude +
-      ",<br></br>\"longtitude\":"+ data[0].Venue.longitude +
-      ",<br></br>\"NoOfEvent\":"+ data[0].Venue.NoOfEvent +
-      "<br></br>}<br></br>\"description\":"+ data[0].Venue.description +
-      ",<br></br>\"presenter\":"+ data[0].Venue.presenter +
-      ",<br></br>\"price\":"+ data[0].Venue.price +
-      "<br></br>}<br></br>"+
-      "<br></br><a href='/content'>return to 'Content'</a>");
+      RMessage += ("{\n\"eventId\":"+ data.eventId +
+      ",\n\"eventTitle\":"+ data.eventTitle + 
+      ",\n\"date\":"+ data.date +
+      ",\n\"Venue\":" +
+      "\n{\n\"venueId\":"+ data.Venue.venueId +
+      ",\n\"venueName\":"+ data.Venue.venueName +
+      ",\n\"latitude\":"+ data.Venue.latitude +
+      ",\n\"longtitude\":"+ data.Venue.longitude +
+      ",\n\"NoOfEvent\":"+ data.Venue.NoOfEvent +
+      "\n}\n\"description\":"+ data.description +
+      ",\n\"presenter\":"+ data.presenter +
+      ",\n\"price\":"+ data.price +
+      "\n}");
       res.contentType('text/plain')
       res.status(200).send(RMessage);
     }
@@ -382,34 +368,33 @@ app.get('/event/:eventName',  (req, res) => {
 .catch((error) => console.log(error));
 })
 
-app.get('/event/:eventDate',  (req, res) => {
+app.get('/event/bydate/:eventDate',  (req, res) => {
   let eDate = req.params.eventDate;
   let RMessage = "";
-  Event.find({date:{ $eq: eDate }})
+  Event.find({date: eDate })
   .populate("Venue")
   .then((data) => {
-    if (data === ""){
-      RMessage += ('no such data<br></br><br></br><a href="/content">return to "Content"</a>');
+    if (data==""){
+      RMessage += ('no such data');
       res.contentType('text/plain');
       res.status(404).send(RMessage);
     }
     else {
       for(let i = 0; i<data.length; i++){
-      RMessage += ("{<br></br>\"eventId\":"+ data[i].eventId +
-      ",<br></br>\"eventTitle\":"+ data[i].eventTitle + 
-      ",<br></br>\"date\":"+ data[i].date +
-      ",<br></br>\"Venue\":" +
-      "<br></br>{<br></br>\"venueId\":"+ data[i].Venue.venueId +
-      ",<br></br>\"venueName\":"+ data[i].Venue.venueName +
-      ",<br></br>\"latitude\":"+ data[i].Venue.latitude +
-      ",<br></br>\"longtitude\":"+ data[i].Venue.longitude +
-      ",<br></br>\"NoOfEvent\":"+ data[i].Venue.NoOfEvent +
-      "<br></br>}<br></br>\"description\":"+ data[i].Venue.description +
-      ",<br></br>\"presenter\":"+ data[i].Venue.presenter +
-      ",<br></br>\"price\":"+ data[i].Venue.price +
-      "<br></br>}<br></br>");
+      RMessage += ("{\n\"eventId\":"+ data[i].eventId +
+      ",\n\"eventTitle\":"+ data[i].eventTitle + 
+      ",\n\"date\":"+ data[i].date +
+      ",\n\"Venue\":" +
+      "\n{\n\"venueId\":"+ data[i].Venue.venueId +
+      ",\n\"venueName\":"+ data[i].Venue.venueName +
+      ",\n\"latitude\":"+ data[i].Venue.latitude +
+      ",\n\"longtitude\":"+ data[i].Venue.longitude +
+      ",\n\"NoOfEvent\":"+ data[i].Venue.NoOfEvent +
+      "\n}\n\"description\":"+ data[i].description +
+      ",\n\"presenter\":"+ data[i].presenter +
+      ",\n\"price\":"+ data[i].price +
+      "\n}\n");
       }
-      RMessage +="<br></br><a href='/content'>return to 'Content'</a>";
       res.contentType('text/plain')
       res.status(200).send(RMessage);
     }
@@ -418,42 +403,41 @@ app.get('/event/:eventDate',  (req, res) => {
 .catch((error) => console.log(error));
 })
 
-app.get('/event/:eventVenue',  (req, res) => {
+app.get('/event/byvenue/:eventVenue',  (req, res) => {
   let eVenue = req.params.eventVenue;
   let RMessage = "";
   Venue.findOne({venueId:{ $eq: eVenue }})
   .then((dataV) => {
-    if (dataV === ""){
-      RMessage += ('no such venue<br></br><br></br><a href="/content">return to "Content"</a>');
+    if (!dataV){
+      RMessage += ('no such venue');
       res.contentType('text/plain');
       res.status(404).send(RMessage);
     }
     else {
-      Event.find({Venue:{ $eq: eVenue }})
+      Event.find({Venue:{ $eq: dataV._id }})
       .populate("Venue")
       .then((data) => {
-    if (data === ""){
-      RMessage += ('no such data<br></br><br></br><a href="/content">return to "Content"</a>');
+    if (data == ""){
+      RMessage += ('no such data');
       res.contentType('text/plain');
       res.status(404).send(RMessage);
     }
     else {
       for(let i = 0; i<data.length; i++){
-      RMessage += ("{<br></br>\"eventId\":"+ data[i].eventId +
-      ",<br></br>\"eventTitle\":"+ data[i].eventTitle + 
-      ",<br></br>\"date\":"+ data[i].date +
-      ",<br></br>\"Venue\":" +
-      "<br></br>{<br></br>\"venueId\":"+ data[i].Venue.venueId +
-      ",<br></br>\"venueName\":"+ data[i].Venue.venueName +
-      ",<br></br>\"latitude\":"+ data[i].Venue.latitude +
-      ",<br></br>\"longtitude\":"+ data[i].Venue.longitude +
-      ",<br></br>\"NoOfEvent\":"+ data[i].Venue.NoOfEvent +
-      "<br></br>}<br></br>\"description\":"+ data[i].Venue.description +
-      ",<br></br>\"presenter\":"+ data[i].Venue.presenter +
-      ",<br></br>\"price\":"+ data[i].Venue.price +
-      "<br></br>}<br></br>")
+        RMessage += ("{\n\"eventId\":"+ data[i].eventId +
+        ",\n\"eventTitle\":"+ data[i].eventTitle + 
+        ",\n\"date\":"+ data[i].date +
+        ",\n\"Venue\":" +
+        "\n{\n\"venueId\":"+ data[i].Venue.venueId +
+        ",\n\"venueName\":"+ data[i].Venue.venueName +
+        ",\n\"latitude\":"+ data[i].Venue.latitude +
+        ",\n\"longtitude\":"+ data[i].Venue.longitude +
+        ",\n\"NoOfEvent\":"+ data[i].Venue.NoOfEvent +
+        "\n}\n\"description\":"+ data[i].description +
+        ",\n\"presenter\":"+ data[i].presenter +
+        ",\n\"price\":"+ data[i].price +
+        "\n}\n");
       }
-      RMessage += ("<br></br><a href='/content'>return to 'Content'</a>");
       res.contentType('text/plain')
       res.status(200).send(RMessage);
     
@@ -469,74 +453,56 @@ app.get('/event/:eventVenue',  (req, res) => {
 //U
 app.put('/event/:eventID', (req, res) => {
   let eid = req.params.eventID;
-  const etitle = req.body.eventtitle;
-  const edate = req.body.eventdate;
-  const vid = req.body.eventvenueid;
-  const edes = req.body.eventdescription;
-  const epresenter = req.body.eventpresenter;
-  const eprice = req.body.eventprice;
+  let etitle = req.body.eventtitle;
+  let edate = req.body.eventdate;
+  let vid = req.body.eventvenueid;
+  let edes = req.body.eventdescription;
+  let epresenter = req.body.eventpresenter;
+  let eprice = req.body.eventprice;
   let UMessage = "";
   Event.findOne({eventId:{ $eq: eid }})
   .populate("Venue")
   .then((data) => {
-    if (data === ""){
-      UMessage += ('event is not existed<br></br><br></br><a href="/content">return to "Content"</a>');
+    if (!data){
+      UMessage += ('event is not existed');
       res.contentType('text/plain');
       res.status(404).send(UMessage);
     }
     else {
+      if(etitle === "") etitle = data.eventTitle;
+      if(edate === "") edate = data.date;
+      if(vid === "") etitle = data.Venue.venueId;
+      if(edes === "") edes = data.description;
+      if(epresenter === "") epresenter = data.presenter;
+      if(eprice === "") eprice = data.price;
+
       Venue.findOne({venueId:{ $eq: vid }})
       .then((dataV) => {
-        if (dataV === ""){
-          UMessage += ('invalid venue<br></br><br></br><a href="/content">return to "Content"</a>');
+        if (!dataV){
+          UMessage += ('invalid venue');
           res.contentType('text/plain');
           res.status(404).send(UMessage);
         }
         else{
-          if(vid !== ""){
           Venue.findOneAndUpdate(
-            {venueId:{ $eq: data[0].Venue.venueId }},
-            {NoOfEvent: data[0].Venue.NoOfEvent-1},
+            {venueId:{ $eq: data.Venue.venueId }},
+            {NoOfEvent: data.Venue.NoOfEvent - 1},
             {new: true})
+          .then((dataV2)=>{
           Venue.findOneAndUpdate(
             {venueId:{ $eq: vid }},
-            {NoOfEvent: dataV[0].NoOfEvent+1},
+            {NoOfEvent: dataV.NoOfEvent + 1},
             {new: true})
-          }
-          if(etitle !== "")
+          .then((dataV3)=>{
           Event.findOneAndUpdate(
-            {venueId:{ $eq: eid }},
-            {eventtitle: etitle},
+            {eventId:{ $eq: eid }},
+            {eventTitle: etitle, date: edate, Venue: dataV._id, description:edes, presenter: epresenter, price: eprice},
             {new: true})
-          if(edate !== "")
-          Event.findOneAndUpdate(
-            {venueId:{ $eq: eid }},
-            {date: edate},
-            {new: true})
-          if(vid !== "")
-          Event.findOneAndUpdate(
-            {venueId:{ $eq: eid }},
-            {Venue: dataV[0]._id},
-            {new: true})
-          if(edes !== "")
-          Event.findOneAndUpdate(
-            {venueId:{ $eq: eid }},
-            {description: edes},
-            {new: true})
-          if(epresenter !== "")
-          Event.findOneAndUpdate(
-            {venueId:{ $eq: eid }},
-            {presenter: epresenter},
-            {new: true})
-          if(eprice !== "")
-          Event.findOneAndUpdate(
-            {venueId:{ $eq: eid }},
-            {price: eprice},
-            {new: true})
-
-          UMessage += ('You have successfully update an event.<br></br><br></br><a href="/content">return to "Content"</a>');
+          .then((dataE)=>{
+          UMessage += ('You have successfully update an event.');
           res.contentType('text/plain');
           res.status(200).send(UMessage);
+        })})})
         }
       })
     }
@@ -546,22 +512,22 @@ app.put('/event/:eventID', (req, res) => {
 
 })
 //D
-app.delete('/event/:eventID', (req, res) => {
+app.delete('/event/byid/:eventID', (req, res) => {
   const eventID = req.params.eventID;
-  Event.find({eventId: {$eq: eventID}})
+  Event.findOne({eventId: {$eq: eventID}})
   .then((data) => {
-    if (data === ""){
+    if (!data){
       res.contentType('text/plain');
-      res.status(404).send("no such data");
+      res.send("no such data");
     }
   
     else {
       Event.findOneAndDelete(
         { eventId: {$eq: eventID} }, 
         )
-        .then((data) => {
+        .then((dataE) => {
           res.contentType('text/plain');
-          res.status(204).send('The deleted data is:', data);
+          res.send('The data is deleted successfully');
         })
         .catch((error) => console.log(error));
         
@@ -570,28 +536,48 @@ app.delete('/event/:eventID', (req, res) => {
 })
 })
 
-app.delete('/event/:eventtitle', (req, res) => {
+app.delete('/event/byname/:eventtitle', (req, res) => {
   const eventtitle = req.params.eventtitle;
-  Event.find({eventTitle: {$eq: eventtitle}})
+  Event.findOne({eventTitle: {$eq: eventtitle}})
   .then((data) => {
-    if (data === ""){
+    if (!data){
       res.contentType('text/plain');
-      res.status(404).send("no such data");
+      res.send("no such data");
     }
   
     else {
       Event.findOneAndDelete(
         { eventTitle: {$eq: eventtitle} }, 
         )
-        .then((data) => {
+        .then((dataE) => {
           res.contentType('text/plain');
-          res.status(204).send('The deleted data is:', data);
+          res.send('The data is deleted successfully');
         })
         .catch((error) => console.log(error));
         
     }
 
 })
+})
+
+//CRUD stored users
+//C
+app.post('/user/', (req, res) => {
+  return loginHandler.CreateUser(req, res);
+});
+
+//R
+app.get('/user/:username', (req, res) => {
+  return loginHandler.ReadUser(req, res);
+});
+
+//U
+app.put('/user/:username', (req, res) => {
+  return loginHandler.UpdateUser(req, res);
+});
+//D
+app.delete('/user/:username', (req, res) => {
+  return loginHandler.DeleteUser(req, res);
 });
 
 app.post('/addfav', (req, res) => {

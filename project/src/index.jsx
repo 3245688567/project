@@ -209,6 +209,260 @@ class Content extends React.Component {
     }
     return 0;
   }
+
+//CRUD stored events
+//C
+
+async CreateEvent(event) {
+  event.preventDefault();
+  const eventid = event.target.elements.Ceid.value;
+  const eventtitle = event.target.elements.Cetitle.value;
+  const eventdate = event.target.elements.Cedate.value;
+  const eventvenueid = event.target.elements.Cevenue.value;
+  const eventdescription = event.target.elements.CeDes.value;
+  const eventpresenter = event.target.elements.CePresenter.value;
+  const eventprice = event.target.elements.CePrice.value;
+  const data = {
+      eventid: eventid,
+      eventtitle: eventtitle,
+      eventdate: eventdate,
+      eventvenueid: eventvenueid,
+      eventdescription: eventdescription,
+      eventpresenter: eventpresenter,
+      eventprice: eventprice
+  };
+
+  const response = await fetch('http://localhost:3001/event', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+
+  const resultPage = await response.text();
+  alert(resultPage);
+};
+
+//R
+
+async ReadEventByID(event) {
+  event.preventDefault();
+  const evid = event.target.elements.Reid.value;
+  const response = await fetch('http://localhost:3001/event/byid/' + evid, {
+    method: 'GET',
+  });
+  const resultPage = await response.text();
+  alert(resultPage);
+
+  };
+
+async ReadEventByName(event) {
+  event.preventDefault();
+  const evname = event.target.elements.Rename.value;
+  const response = await fetch('http://localhost:3001/event/byname/' + evname, {
+      method: 'GET',
+  });
+  const resultPage = await response.text();
+  alert(resultPage);
+  };
+
+async ReadEventByDate(event) {
+  event.preventDefault();
+  const evdate = event.target.elements.Redate.value;
+  const response = await fetch('http://localhost:3001/event/bydate/' + evdate, {
+      method: 'GET',
+  });
+  const resultPage = await response.text();
+  alert(resultPage);
+  };
+
+
+async ReadEventByVenue(event) {
+  event.preventDefault();
+  const evvenue = event.target.elements.Revenue.value;
+  const response = await fetch('http://localhost:3001/event/byvenue/' + evvenue, {
+      method: 'GET',
+  });
+  const resultPage = await response.text();
+  alert(resultPage);
+  };
+
+//U
+async UpdateEvent(event) {
+  event.preventDefault();
+  const eventid = event.target.elements.Ueid.value;
+  const eventtitle = event.target.elements.Uetitle.value;
+  const eventdate = event.target.elements.Uedate.value;
+  const eventvenueid = event.target.elements.Uevenue.value;
+  const eventdescription = event.target.elements.UeDes.value;
+  const eventpresenter = event.target.elements.UePresenter.value;
+  const eventprice = event.target.elements.UePrice.value;
+  const data = {
+      eventid: eventid,
+      eventtitle: eventtitle,
+      eventdate: eventdate,
+      eventvenueid: eventvenueid,
+      eventdescription: eventdescription,
+      eventpresenter: eventpresenter,
+      eventprice: eventprice
+  };
+
+  // use PUT method to send a request to the server
+  const response = await fetch('http://localhost:3001/event/' + eventid, { //put your server address here
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+
+  // render a new page if a response is received
+  const resultPage = await response.text();
+  alert(resultPage);
+};
+
+//D
+async DeleteEventByID(event) {
+  event.preventDefault();
+  const eventID = event.target.elements.Deid.value;
+  const data = {
+    eventID: eventID
+  };
+
+  // use Delete method to send a request to the server
+  const response = await fetch('http://localhost:3001/event/byid/'+ eventID, { //put your server address here
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+
+  // render a new page if a response is received
+  const resultPage = await response.text();
+  alert(resultPage);
+};
+
+async DeleteEventByName(event) {
+  event.preventDefault();
+  const eventtitle = event.target.elements.Dename.value;
+  const data = {
+      eventtitle: eventtitle
+  };
+
+  // use Delete method to send a request to the server
+  const response = await fetch('http://localhost:3001/event/byname/'+ eventtitle, { //put your server address here
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+
+  // render a new page if a response is received
+  const resultPage = await response.text();
+  alert(resultPage);
+};
+
+
+
+
+
+
+//CRUD stored users
+
+//C
+async CreateUser(event) {
+  event.preventDefault();
+  const username = event.target.elements.CUsername.value;
+  const password = event.target.elements.CPw.value;
+
+  const data = {
+      username: username,
+      password: password
+  };
+
+  // use POST method to send a request to the server
+  const response = await fetch('http://localhost:3001/user', { //put your server address here
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+
+  // render a new page if a response is received
+  const resultPage = await response.text();
+  alert(resultPage);
+};
+
+//R
+async ReadUser(event) {
+  event.preventDefault();
+  const username = event.target.elements.RUsername.value;
+  const response = await fetch('http://localhost:3001/user/' + username, {
+    method: 'GET',
+  });
+  const resultPage = await response.text();
+  alert(resultPage);
+  };
+
+
+
+
+
+//U
+async UpdateUser(event) {
+  event.preventDefault();
+  const username = event.target.elements.UUsername.value;
+  const newusername = event.target.elements.UNewUser.value;
+  const newpassword = event.target.elements.UPw.value;
+  
+  const data = {
+      username: username,
+      newusername: newusername,
+      newpassword: newpassword,
+  };
+
+  // use PUT method to send a request to the server
+  const response = await fetch('http://localhost:3001/user/' + username, { //put your server address here
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+
+  // render a new page if a response is received
+  const resultPage = await response.text();
+  alert(resultPage);
+};
+
+
+//D
+async DeleteUser(event) {
+  event.preventDefault();
+  const username = event.target.elements.DUsername.value;
+  const data = {
+      username: username
+  };
+
+  // use Delete method to send a request to the server
+  const response = await fetch('http://localhost:3001/user/'+ username, { //put your server address here
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+
+  // render a new page if a response is received
+  const resultPage = await response.text();
+  alert(resultPage);
+};
+
+
   render() {
     const data = this.state.data;
     let keyword = this.state.keyword;
@@ -253,221 +507,219 @@ class Content extends React.Component {
     else if (login === 2) {
       return (
         <section>
-          <h2 style={{ textAlign: "center" }}>You are now an admin and you can do CRUD now</h2>
-          <br></br>
-          <div class="container p-5 my-5 border">
-            <h3 style={{ textAlign: "center" }}>CRUD Stored Events</h3>
-            <br></br><br></br>
-            <span class="row">
-              <span class="col-sm-3">
-                <h3>Create an Event</h3>
-                <body>
-                  <br></br>
-                  <form id="CEvent">
-                    <label for="Ceid">Event ID: </label>
-                    <br></br>
-                    <input type="number" id="Ceid" name="Ceid" placeholder="1234567" required></input>
-                    <br></br>
-                    <label for="Cetitle">Event Title: </label>
-                    <br></br>
-                    <input type="text" id="Cetitle" name="Cetitle" placeholder="Hello Hong Kong" required></input>
-                    <br></br>
-                    <label for="Cedate">Event Date: </label>
-                    <br></br>
-                    <input type="text" id="Cedate" name="Cedate" placeholder="1/1/2024"></input>
-                    <br></br>
-                    <label for="Cevenue">Event Venue ID: </label>
-                    <br></br>
-                    <input type="number" id="Cevenue" name="Cevenue" required></input>
-                    <br></br>
-                    <label for="CeDes">Event Description: </label>
-                    <br></br>
-                    <textarea id="CeDes" name="CeDes"></textarea>
-                    <br></br>
-                    <label for="CePresenter">Event Presenter: </label>
-                    <br></br>
-                    <input type="text" id="CePresenter" name="CePresenter" placeholder="Colin Tsang"></input>
-                    <br></br>
-                    <label for="CePrice">Event Price: </label>
-                    <br></br>
-                    <input type="text" id="CePrice" name="CePrice" placeholder="FOR FREE"></input>
-                    <br></br><br></br><br></br>
-                    <input type="submit" value="Create"></input>
-                  </form>
-                </body>
-              </span>
-              <span class="col-sm-3">
-                <h3>Read(Find) Events</h3>
-                <body>
-                  <br></br>
-                  <form id="REventByID">
-                    <label for="Reid">By Event ID: </label>
-                    <br></br>
-                    <input type="number" id="Reid" name="Reid" placeholder="1234567" required></input>
-                    <br></br>
-                    <input type="submit" value="Find"></input>
-                  </form>
-                  <br></br><br></br>
-                  <form id="REventByName">
-                    <label for="Rename">By Event Name: </label>
-                    <br></br>
-                    <input type="text" id="Rename" name="Rename" placeholder="Hello Hong Kong" required></input>
-                    <br></br>
-                    <input type="submit" value="Find"></input>
-                  </form>
-                  <br></br><br></br>
-                  <form id="REventByDate">
-                    <label for="Redate">By Event Date: </label>
-                    <br></br>
-                    <input type="text" id="Redate" name="Redate" placeholder="1/1/2024" required></input>
-                    <br></br>
-                    <input type="submit" value="Find"></input>
-                  </form>
-                  <br></br><br></br>
-                  <form id="REventByVenue">
-                    <label for="Revenue">By Venue ID: </label>
-                    <br></br>
-                    <input type="number" id="Revenue" name="Revenue" required></input>
-                    <br></br>
-                    <input type="submit" value="Find"></input>
-                  </form>
-                </body>
-              </span>
-              <span class="col-sm-3">
-                <h3>Update an Event</h3>
-                <body>
-                  <br></br>
-                  <form id="UEvent">
-                    <label for="Ueid">Corresponding Event ID: </label>
-                    <br></br>
-                    <input type="number" id="Ueid" name="Ueid" placeholder="1234567" required></input>
-                    <br></br>
-                    <label for="Uetitle">Change Event Title: </label>
-                    <br></br>
-                    <input type="text" id="Uetitle" name="Uetitle" placeholder="Goodbye Hong Kong"></input>
-                    <br></br>
-                    <label for="Uedate">Add/Change Event Date: </label>
-                    <br></br>
-                    <input type="text" id="Uedate" name="Uedate" placeholder="1/12/2024"></input>
-                    <br></br>
-                    <label for="Uevenue">Update Event Venue ID: </label>
-                    <br></br>
-                    <input type="number" id="Uevenue" name="Uevenue"></input>
-                    <br></br>
-                    <label for="UeDes">Add/Change Event Description: </label>
-                    <br></br>
-                    <textarea id="UeDes" name="UeDes"></textarea>
-                    <br></br>
-                    <label for="UePresenter">Add/Change Event Presenter: </label>
-                    <input type="text" id="UePresenter" name="UePresenter" placeholder="Colin Tsang"></input>
-                    <br></br>
-                    <label for="CePrice">Add/Change Event Price: </label>
-                    <br></br>
-                    <input type="text" id="UePrice" name="UePrice" placeholder="$90"></input>
-                    <br></br><br></br><br></br>
-                    <input type="submit" value="Update"></input>
-                  </form>
-                </body>
-              </span>
-
-              <span class="col-sm-3">
-                <h3>Delete an Event</h3>
-                <body>
-                  <br></br>
-                  <form id="DEventByID">
-                    <label for="Deid">By Event ID: </label>
-                    <br></br>
-                    <input type="number" id="Deid" name="Deid" placeholder="1234567" required></input>
-                    <br></br>
-                    <input type="submit" value="Delete"></input>
-                  </form>
-                  <br></br><br></br>
-                  <form id="DEventByName">
-                    <label for="Dename">By Event Name: </label>
-                    <br></br>
-                    <input type="text" id="Dename" name="Dename" placeholder="Hello Hong Kong" required></input>
-                    <br></br>
-                    <input type="submit" value="Delete"></input>
-                  </form>
-                </body>
-              </span>
-
+        <h2 style={{textAlign:"center"}}>You are now an admin and you can do CRUD now</h2>
+        <br></br>
+        <div>{this.state.result}</div>
+        <div class="container p-5 my-5 border">
+        <h3 style={{textAlign:"center"}}>CRUD Stored Events</h3>
+        <br></br><br></br>
+        <span class="row">
+        <span class="col-sm-3">
+        <h3>Create an Event</h3>
+            <body>
+              <br></br>
+              <form id="CEvent" onSubmit={this.CreateEvent}>
+                 <label for="Ceid">Event ID: </label>
+                 <br></br>
+                 <input type="number" id="Ceid" name="Ceid" placeholder="1234567" required></input>
+                 <br></br>
+                 <label for="Cetitle">Event Title: </label>
+                 <br></br>
+                 <input type="text" id="Cetitle" name="Cetitle" placeholder="Hello Hong Kong" required></input>
+                 <br></br>
+                 <label for="Cedate">Event Date: </label>
+                 <br></br>
+                 <input type="text" id="Cedate" name="Cedate" placeholder="15 December 2023 (Fri) 7:45pm"></input>
+                 <br></br>
+                 <label for="Cevenue">Event Venue ID: </label>
+                 <br></br>
+                 <input type="number" id="Cevenue" name="Cevenue" placeholder="36310035" required></input>
+                 <br></br>
+                 <label for="CeDes">Event Description: </label>
+                 <br></br>
+                 <textarea id="CeDes" name="CeDes"></textarea>
+                 <br></br>
+                 <label for="CePresenter">Event Presenter: </label>
+                 <br></br>
+                 <input type="text" id="CePresenter" name="CePresenter" placeholder="Colin Tsang"></input>
+                 <br></br>
+                 <label for="CePrice">Event Price: </label>
+                 <br></br>
+                 <input type="text" id="CePrice" name="CePrice" placeholder="FOR FREE"></input>
+                 <br></br><br></br><br></br>
+                 <input type="submit" value="Create"></input>
+              </form>
+            </body>
             </span>
-            <script>
-
-            </script>
-          </div>
-          <div class="container p-5 my-5 border">
-            <h3 style={{ textAlign: "center" }}>CRUD User Data</h3>
-            <br></br><br></br>
-            <span class="row">
-              <span class="col-sm-3">
-                <h3>Create an User</h3>
-                <body>
-                  <br></br>
-                  <form id="CUser">
-                    <label for="CUsername">Username: </label>
-                    <br></br>
-                    <input type="text" id="CUsername" name="CUsername" placeholder="Colin Tsang" required></input>
-                    <br></br>
-                    <label for="CPw">Password: </label>
-                    <br></br>
-                    <input type="text" id="CPw" name="CPw" required></input>
-                    <br></br><br></br>
-                    <input type="submit" value="Create"></input>
-                  </form>
-                </body>
-              </span>
-              <span class="col-sm-3">
-                <h3>Read(Find) Users</h3>
-                <body>
-                  <br></br>
-                  <form id="RUser">
-                    <label for="RUsername">By Username: </label>
-                    <br></br>
-                    <input type="text" id="RUsername" name="RUsername" placeholder="Colin Tsang" required></input>
-                    <br></br><br></br>
-                    <input type="submit" value="Find"></input>
-                  </form>
-                </body>
-              </span>
-              <span class="col-sm-3">
-                <h3>Update an User</h3>
-                <body>
-                  <br></br>
-                  <form id="UUser">
-                    <label for="UUsername">Corresponding Username: </label>
-                    <br></br>
-                    <input type="text" id="UUsername" name="UUsername" placeholder="Colin Tsang" required></input>
-                    <br></br>
-                    <label for="UNewUser">Change Username: </label>
-                    <br></br>
-                    <input type="text" id="UNewUser" name="UNewUser" placeholder="John Doe"></input>
-                    <br></br>
-                    <label for="UPw">Change Password: </label>
-                    <br></br>
-                    <input type="text" id="UPw" name="UPw"></input>
-                    <br></br><br></br>
-                    <input type="submit" value="Update"></input>
-                  </form>
-                </body>
-              </span>
-
-              <span class="col-sm-3">
-                <h3>Delete an User</h3>
-                <body>
-                  <br></br>
-                  <form id="DUser">
-                    <label for="DUsername">Username: </label>
-                    <br></br>
-                    <input type="text" id="DUsername" name="DUsername" placeholder="Colin Tsang" required></input>
-                    <br></br><br></br>
-                    <input type="submit" value="Delete"></input>
-                  </form>
-                </body>
-              </span>
+            <span class="col-sm-3">
+        <h3>Read(Find) Events</h3>
+            <body>
+              <br></br>
+              <form id="REventByID" onSubmit={this.ReadEventByID}>
+                 <label for="Reid">By Event ID: </label>
+                 <br></br>
+                 <input type="number" id="Reid" name="Reid" placeholder="1234567" required></input>
+                 <br></br>
+                 <input type="submit" value="Find"></input>
+              </form>
+              <br></br><br></br>
+              <form id="REventByName" onSubmit={this.ReadEventByName}>
+                 <label for="Rename">By Event Name: </label>
+                 <br></br>
+                 <input type="text" id="Rename" name="Rename" placeholder="Hello Hong Kong" required></input>
+                 <br></br>
+                 <input type="submit" value="Find"></input>
+              </form>
+              <br></br><br></br>
+              <form id="REventByDate" onSubmit={this.ReadEventByDate}>
+                 <label for="Redate">By Event Date: </label>
+                 <br></br>
+                 <input type="text" id="Redate" name="Redate" placeholder="15 December 2023 (Fri) 7:45pm" required></input>
+                 <br></br>
+                 <input type="submit" value="Find"></input>
+              </form>
+              <br></br><br></br>
+              <form id="REventByVenue" onSubmit={this.ReadEventByVenue}>
+                 <label for="Revenue">By Venue ID: </label>
+                 <br></br>
+                 <input type="number" id="Revenue" name="Revenue" placeholder="36310035" required></input>
+                 <br></br>
+                 <input type="submit" value="Find"></input>
+              </form>
+            </body>
             </span>
-          </div>
+            <span class="col-sm-3">
+              <h3>Update an Event</h3>
+            <body>
+              <br></br>
+              <form id="UEvent" onSubmit={this.UpdateEvent}>
+                 <label for="Ueid">Corresponding Event ID: </label>
+                 <br></br>
+                 <input type="number" id="Ueid" name="Ueid" placeholder="1234567" required></input>
+                 <br></br>
+                 <label for="Uetitle">Change Event Title: </label>
+                 <br></br>
+                 <input type="text" id="Uetitle" name="Uetitle" placeholder="Goodbye Hong Kong"></input>
+                 <br></br>
+                 <label for="Uedate">Add/Change Event Date: </label>
+                 <br></br>
+                 <input type="text" id="Uedate" name="Uedate" placeholder="30 December 2023 (Sat) 10:45pm"></input>
+                 <br></br>
+                 <label for="Uevenue">Update Event Venue ID: </label>
+                 <br></br>
+                 <input type="number" id="Uevenue" name="Uevenue" placeholder="50110014"></input>
+                 <br></br>
+                 <label for="UeDes">Add/Change Event Description: </label>
+                 <br></br>
+                 <textarea id="UeDes" name="UeDes" placeholder="GPA=4.0"></textarea>
+                 <br></br>
+                 <label for="UePresenter">Add/Change Event Presenter: </label>
+                 <input type="text" id="UePresenter" name="UePresenter" placeholder="John Doe"></input>
+                 <br></br>
+                 <label for="CePrice">Add/Change Event Price: </label>
+                 <br></br>
+                 <input type="text" id="UePrice" name="UePrice" placeholder="$90"></input>
+                 <br></br><br></br><br></br>
+                 <input type="submit" value="Update"></input>
+              </form>
+            </body>
+            </span>
+            
+            <span class="col-sm-3">
+        <h3>Delete an Event</h3>
+        <body>
+              <br></br>
+              <form id="DEventByID" onSubmit={this.DeleteEventByID}>
+                 <label for="Deid">By Event ID: </label>
+                 <br></br>
+                 <input type="number" id="Deid" name="Deid" placeholder="1234567" required></input>
+                 <br></br>
+                 <input type="submit" value="Delete"></input>
+              </form>
+              <br></br><br></br>
+              <form id="DEventByName" onSubmit={this.DeleteEventByName}>
+                 <label for="Dename">By Event Name: </label>
+                 <br></br>
+                 <input type="text" id="Dename" name="Dename" placeholder="Goodbye Hong Kong" required></input>
+                 <br></br>
+                 <input type="submit" value="Delete"></input>
+              </form>
+              </body>
+            </span>
+            
+            </span>
+        </div>
+        <div class="container p-5 my-5 border">
+        <h3 style={{textAlign:"center"}}>CRUD User Data</h3>
+        <br></br><br></br>
+        <span class="row">
+        <span class="col-sm-3">
+        <h3>Create an User</h3>
+            <body>
+              <br></br>
+              <form id="CUser" onSubmit={this.CreateUser}>
+                 <label for="CUsername">Username: </label>
+                 <br></br>
+                 <input type="text" id="CUsername" name="CUsername" placeholder="Colin Tsang" required></input>
+                 <br></br>
+                 <label for="CPw">Password: </label>
+                 <br></br>
+                 <input type="text" id="CPw" name="CPw" required></input>
+                 <br></br><br></br>
+                 <input type="submit" value="Create"></input>
+              </form>
+            </body>
+            </span>
+            <span class="col-sm-3">
+        <h3>Read(Find) Users</h3>
+            <body>
+              <br></br>
+              <form id="RUser" onSubmit={this.ReadUser}>
+                 <label for="RUsername">By Username: </label>
+                 <br></br>
+                 <input type="text" id="RUsername" name="RUsername" placeholder="Colin Tsang" required></input>
+                 <br></br><br></br>
+                 <input type="submit" value="Find"></input>
+              </form>
+            </body>
+            </span>
+            <span class="col-sm-3">
+            <h3>Update an User</h3>
+            <body>
+              <br></br>
+              <form id="UUser" onSubmit={this.UpdateUser}>
+                 <label for="UUsername">Corresponding Username: </label>
+                 <br></br>
+                 <input type="text" id="UUsername" name="UUsername" placeholder="Colin Tsang" required></input>
+                 <br></br>
+                 <label for="UNewUser">Change Username: </label>
+                 <br></br>
+                 <input type="text" id="UNewUser" name="UNewUser" placeholder="John Doe"></input>
+                 <br></br>
+                 <label for="UPw">Change Password: </label>
+                 <br></br>
+                 <input type="text" id="UPw" name="UPw"></input>
+                 <br></br><br></br>
+                 <input type="submit" value="Update"></input>
+              </form>
+            </body>
+            </span>
+            
+            <span class="col-sm-3">
+        <h3>Delete an User</h3>
+        <body>
+              <br></br>
+              <form id="DUser" onSubmit={this.DeleteUser}>
+                 <label for="DUsername">Username: </label>
+                 <br></br>
+                 <input type="text" id="DUsername" name="DUsername" placeholder="John Doe" required></input>
+                 <br></br><br></br>
+                 <input type="submit" value="Delete"></input>
+              </form>
+              </body>
+            </span>
+            </span>
+        </div>
         </section>
 
       )

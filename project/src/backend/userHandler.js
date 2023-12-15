@@ -106,14 +106,14 @@ module.exports.login = async function (req, res) {
 
 //CRUD stored users
 //C
-app.post('/user/', (req, res) => {
+module.exports.CreateUser = async function (req, res) {
   const username = req.body.username;
   const password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
   let CMess = "";
   User.findOne({ username: username })
     .then((data) => {
       if (data) {
-        CMess += ('User is already created before<br></br><br></br><a href="/content">return to "Content"</a>');
+        CMess += ('User is already created before');
         res.contentType('text/plain');
         res.status(404).send(CMess);
       }
@@ -135,100 +135,96 @@ app.post('/user/', (req, res) => {
             console.log(error);
           });
 
-        CMess += ('A new user account is created<br></br><br></br><a href="/content">return to "Content"</a>');
+        CMess += ('A new user account is created');
         res.contentType('text/plain');
         res.status(200).send(CMess);
 
       }
     })
 
-})
+}
 
 
 //R
-app.get('/user/:username', (req, res) => {
+module.exports.ReadUser = async function (req, res) {
   const username = req.params.username;
   let RMess = "";
   User.findOne({ username: username })
     .then((data) => {
       if (!data) {
-        RMess += ('User is not created before<br></br><br></br><a href="/content">return to "Content"</a>');
+        RMess += ('User is not created before');
         res.contentType('text/plain');
         res.status(404).send(RMess);
       }
       else {
-        RMess += ("{<br></br>\"username\":" + data[0].username +
-          ",<br></br>\"(Hashed) password\":" + data[0].password +
-          ",<br></br>\"userType\":" + data[0].userType +
-          "<br></br>}<br></br>" +
-          "<br></br><a href='/content'>return to 'Content'</a>");
+        RMess += ("{\n\"username\":" + data.username +
+          ",\n\"(Hashed) password\":" + data.password +
+          ",\n\"userType\":" + data.userType +
+          "\n}\n");
         res.contentType('text/plain')
         res.status(200).send(RMess);
 
       }
     })
-})
+}
 
 
 //U
-app.put('/user/:username', (req, res) => {
-  const username = req.params.username;
-  const newusername = req.body.newusername;
-  const newpassword = bcrypt.hashSync(req.body.newpassword, bcrypt.genSaltSync(10));
+module.exports.UpdateUser = async function (req, res) {
+  let username = req.params.username;
+  let newusername = req.body.newusername;
+  let newpassword = bcrypt.hashSync(req.body.newpassword, bcrypt.genSaltSync(10));
   let UMess = "";
   User.findOne({ username: username })
     .then((data) => {
       if (!data) {
-        UMess += ('User is not created before<br></br><br></br><a href="/content">return to "Content"</a>');
+        UMess += ('User is not created before');
         res.contentType('text/plain');
         res.status(404).send(UMess);
       }
       else {
-        if (newusername !== "")
-          User.findOneAndUpdate(
+        if (newusername === "") newusername = data.username;
+        if (newpassword === "") newpassword = data.password;
+        User.findOneAndUpdate(
             { username: { $eq: username } },
-            { username: newusername },
+            { username: newusername, password: newpassword },
             { new: true })
-        if (newpassword !== "")
-          User.findOneAndUpdate(
-            { username: { $eq: username } },
-            { password: newpassword },
-            { new: true })
-        UMess += ('You have successfully update an user.<br></br><br></br><a href="/content">return to "Content"</a>');
+        .then((dataU) =>{  
+        UMess += ('You have successfully update an user account');
         res.contentType('text/plain');
         res.status(200).send(UMess);
-
+        })
       }
     })
 
 
-})
+}
 
 
 //D
-app.delete('/user/:username', (req, res) => {
+module.exports.DeleteUser = async function (req, res) {
   const username = req.params.username;
-  Event.find({ username: { $eq: username } })
+  User.findOne({ username: { $eq: username } })
     .then((data) => {
-      if (data === "") {
+      if (!data) {
         res.contentType('text/plain');
-        res.status(404).send("no such data");
+        res.send("no such data");
       }
 
       else {
-        Event.findOneAndDelete(
+        User.findOneAndDelete(
           { username: { $eq: username } },
         )
-          .then((data) => {
+          .then((dataU) => {
             res.contentType('text/plain');
-            res.status(204).send('The deleted data is:', data);
+            res.send('The user account is deleted successfully');
           })
           .catch((error) => console.log(error));
 
       }
 
     })
-});
+};
 
 module.exports.addfav = async function (req, res) {
   let response = { exist: 0 };

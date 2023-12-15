@@ -135,7 +135,12 @@ class Home extends React.Component {
 class Content extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { data: [], order: 0, keyword: ``, updatetime: 0 };//order: 0=ascending, 1=descending
+    this.state = { data: [], order: 0, keyword: ``, updatetime: 0, result: "" };//order: 0=ascending, 1=descending
+    this.ReadEventByID = this.ReadEventByID.bind(this);
+    this.ReadEventByName = this.ReadEventByName.bind(this);
+    this.ReadEventByDate = this.ReadEventByDate.bind(this);
+    this.ReadEventByVenue = this.ReadEventByVenue.bind(this);
+    this.ReadUser = this.ReadUser.bind(this);
   }
 
   async componentDidMount() {
@@ -254,7 +259,7 @@ async ReadEventByID(event) {
   });
   const resultPage = await response.text();
   alert(resultPage);
-
+  this.setState({ result: resultPage })
   };
 
 async ReadEventByName(event) {
@@ -265,6 +270,7 @@ async ReadEventByName(event) {
   });
   const resultPage = await response.text();
   alert(resultPage);
+  this.setState({ result: resultPage })
   };
 
 async ReadEventByDate(event) {
@@ -275,6 +281,7 @@ async ReadEventByDate(event) {
   });
   const resultPage = await response.text();
   alert(resultPage);
+  this.setState({ result: resultPage })
   };
 
 
@@ -286,6 +293,7 @@ async ReadEventByVenue(event) {
   });
   const resultPage = await response.text();
   alert(resultPage);
+  this.setState({ result: resultPage })
   };
 
 //U
@@ -406,6 +414,7 @@ async ReadUser(event) {
   });
   const resultPage = await response.text();
   alert(resultPage);
+  this.setState({ result: resultPage })
   };
 
 
@@ -509,7 +518,9 @@ async DeleteUser(event) {
         <section>
         <h2 style={{textAlign:"center"}}>You are now an admin and you can do CRUD now</h2>
         <br></br>
-        <div>{this.state.result}</div>
+        <div class="container p-5 my-5 border" style={{textAlign:"center"}}>
+          <h3 style={{textAlign:"center"}}>The "Read/Find" details will show here:</h3>
+          <br></br>{this.state.result}</div>
         <div class="container p-5 my-5 border">
         <h3 style={{textAlign:"center"}}>CRUD Stored Events</h3>
         <br></br><br></br>

@@ -1,3 +1,10 @@
+//Group 39:
+//CAO Yujie, 1155174003
+//CHAN Cho Kit, 1155175546
+//CHOW Ka Po, 1155136405
+//DONG Zhi Lin, 1155159370
+//FONG Ka Wai, 1155177052
+
 //npm install xml2js cors mongoose express bcrypt
 const express = require('express');
 const app = express();

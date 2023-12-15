@@ -906,7 +906,6 @@ class Detail extends React.Component {
                   <th scope="row">Price:</th>
                   <td>{data.price}</td>
                 </tr>
-                <button class="btn btn-primary">Like &#128077;</button>
                 <hr/>
               </div>
             ))}

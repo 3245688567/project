@@ -114,7 +114,7 @@ class Home extends React.Component {
                     <li>CHAN Cho Kit 1155175546: Admin CRUD</li>
                     <li>CHOW Ka Po 1155136405: </li>
                     <li>DONG Zhi Lin 1155159370: </li>
-                    <li>FONG Ka Wai 1155177052: </li></td>
+                    <li>FONG Ka Wai 1155177052: data extraction from gov database, all functions in user action</li></td>
                 </tr>
                 <tr>
                   <td>DataSet</td>
